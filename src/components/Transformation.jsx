@@ -72,10 +72,10 @@ const Transformation = () => {
                         ]
                     }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="relative z-20 w-32 h-32 md:w-40 md:h-40 rounded-full glass-morphism border-white/20 flex items-center justify-center bg-black/40 backdrop-blur-2xl overflow-hidden"
+                    className="relative z-20 w-32 h-32 md:w-44 md:h-44 rounded-full glass-morphism border-white/20 flex items-end justify-center bg-black/40 backdrop-blur-2xl overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-accent/5 animate-pulse" />
-                    <span className="text-6xl md:text-8xl font-black text-white selection:bg-accent font-display">G</span>
+                    <img src="/robot.png" alt="Grandir Robot" className="relative z-10 w-[110%] h-[110%] object-cover object-top translate-y-2 pointer-events-none" />
                 </motion.div>
 
                 {/* Tracks Visualization (Optional paths) */}
