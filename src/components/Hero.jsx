@@ -14,7 +14,7 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ scale: 1.02 }}
-                className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center justify-between w-[90%] max-w-3xl bg-[#111111] border border-white/5 rounded-full py-1.5 pl-6 pr-1.5 shadow-xl z-20 group"
+                className="absolute top-8 inset-x-0 mx-auto flex items-center justify-between w-[90%] max-w-3xl bg-[#111111] border border-white/5 rounded-full py-1.5 pl-6 pr-1.5 shadow-xl z-20 group"
             >
                 <div className="absolute inset-0 bg-accent/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
