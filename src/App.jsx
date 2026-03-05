@@ -3,6 +3,7 @@ import Hero from './components/Hero'
 import Transformation from './components/Transformation'
 import PainPoints from './components/PainPoints'
 import GrandirAnalytics from './components/GrandirAnalytics'
+import ServicesHero from './components/ServicesHero'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Hero />
       <Transformation />
       <PainPoints />
+      <ServicesHero />
       <GrandirAnalytics />
     </main>
   )

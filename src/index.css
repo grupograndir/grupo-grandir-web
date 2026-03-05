@@ -31,6 +31,12 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.services-text-gradient {
+  background: linear-gradient(180deg, #71717A 0%, #3F3F46 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Grandir Analytics Slider */
 .grandir-slider {
   -webkit-appearance: none;
