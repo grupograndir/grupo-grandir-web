@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const steps = [
     {
@@ -95,74 +95,67 @@ const steps = [
     },
 ];
 
-const StepCard = ({ step, isActive }) => {
-    const ref = useRef(null);
+const StepCard = ({ step }) => (
+    <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10"
+    >
+        {/* Timeline badge */}
+        <div className="flex items-center gap-3 mb-6">
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
+                {step.timeline}
+            </span>
+            <div className="h-[1px] flex-1 bg-white/[0.06]" />
+        </div>
 
-    return (
-        <motion.div
-            ref={ref}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className={`bg-[#0A0A0A] border rounded-3xl p-8 lg:p-10 transition-all duration-500 ${isActive ? 'border-accent/20 shadow-[0_0_40px_rgba(255,40,0,0.05)]' : 'border-white/[0.06]'
-                }`}
-        >
-            {/* Timeline badge */}
-            <div className="flex items-center gap-3 mb-6">
-                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
-                    {step.timeline}
-                </span>
-                <div className="h-[1px] flex-1 bg-white/[0.06]" />
-            </div>
+        {/* Title */}
+        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+            {step.title}
+        </h3>
 
-            {/* Title */}
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
-                {step.title}
-            </h3>
+        {/* Description */}
+        <p className="text-secondary text-sm md:text-base leading-relaxed mb-8">
+            {step.description}
+        </p>
 
-            {/* Description */}
-            <p className="text-secondary text-sm md:text-base leading-relaxed mb-8">
-                {step.description}
-            </p>
+        {/* Illustration */}
+        <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
+            <motion.div
+                initial={{ scale: 0.85, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="w-40 h-40"
+            >
+                {step.icon}
+            </motion.div>
+        </div>
 
-            {/* Illustration */}
-            <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
+        {/* Features grid */}
+        <div className="grid grid-cols-2 gap-3">
+            {step.features.map((feature, i) => (
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
+                    key={feature}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="w-40 h-40"
+                    transition={{ duration: 0.3, delay: 0.08 * i }}
+                    className="flex items-center gap-2"
                 >
-                    {step.icon}
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                    <span className="text-xs text-secondary">{feature}</span>
                 </motion.div>
-            </div>
-
-            {/* Features grid */}
-            <div className="grid grid-cols-2 gap-3">
-                {step.features.map((feature, i) => (
-                    <motion.div
-                        key={feature}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: 0.1 * i }}
-                        className="flex items-center gap-2"
-                    >
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-                        <span className="text-xs text-secondary">{feature}</span>
-                    </motion.div>
-                ))}
-            </div>
-        </motion.div>
-    );
-};
+            ))}
+        </div>
+    </motion.div>
+);
 
 const Methodology = () => {
     const [activeStep, setActiveStep] = useState(0);
     const cardRefs = useRef([]);
-    const sectionRef = useRef(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -174,7 +167,7 @@ const Methodology = () => {
                     }
                 });
             },
-            { threshold: 0.5, rootMargin: '-20% 0px -20% 0px' }
+            { threshold: 0.4, rootMargin: '-30% 0px -30% 0px' }
         );
 
         cardRefs.current.forEach((ref) => {
@@ -189,7 +182,7 @@ const Methodology = () => {
     };
 
     return (
-        <section ref={sectionRef} className="relative py-32 overflow-hidden">
+        <section className="relative py-32 overflow-hidden">
             {/* Background */}
             <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[200px] pointer-events-none" />
 
@@ -214,11 +207,11 @@ const Methodology = () => {
                     </p>
                 </motion.div>
 
-                {/* Two-column layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                {/* Two-column layout using flex instead of grid for proper sticky behavior */}
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative">
                     {/* Left Sidebar — Sticky Navigation */}
-                    <div className="lg:col-span-4">
-                        <div className="lg:sticky lg:top-32">
+                    <div className="lg:w-[320px] shrink-0">
+                        <div className="lg:sticky lg:top-24" style={{ position: '-webkit-sticky' }}>
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -230,23 +223,23 @@ const Methodology = () => {
                                     <button
                                         key={step.id}
                                         onClick={() => scrollToStep(index)}
-                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-400 group flex items-center gap-4 ${activeStep === index
-                                            ? 'bg-white text-black shadow-lg'
-                                            : 'bg-white/[0.03] text-secondary hover:bg-white/[0.06]'
+                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group flex items-center gap-4 ${activeStep === index
+                                                ? 'bg-white text-black shadow-lg'
+                                                : 'bg-white/[0.03] text-secondary hover:bg-white/[0.06]'
                                             }`}
                                     >
-                                        <span className={`text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors ${activeStep === index
-                                            ? 'bg-accent text-white'
-                                            : 'bg-white/[0.08] text-secondary'
+                                        <span className={`text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${activeStep === index
+                                                ? 'bg-accent text-white'
+                                                : 'bg-white/[0.08] text-secondary'
                                             }`}>
                                             {step.id}
                                         </span>
                                         <div className="flex flex-col">
-                                            <span className={`text-sm font-semibold transition-colors ${activeStep === index ? 'text-black' : 'text-white'
+                                            <span className={`text-sm font-semibold transition-colors duration-300 ${activeStep === index ? 'text-black' : 'text-white'
                                                 }`}>
                                                 {step.label}
                                             </span>
-                                            <span className={`text-[10px] tracking-wider uppercase ${activeStep === index ? 'text-black/50' : 'text-secondary/50'
+                                            <span className={`text-[10px] tracking-wider uppercase transition-colors duration-300 ${activeStep === index ? 'text-black/50' : 'text-secondary/50'
                                                 }`}>
                                                 {step.timeline}
                                             </span>
@@ -272,13 +265,13 @@ const Methodology = () => {
                     </div>
 
                     {/* Right Column — Scrollable Cards */}
-                    <div className="lg:col-span-8 space-y-8">
+                    <div className="flex-1 space-y-8">
                         {steps.map((step, index) => (
                             <div
                                 key={step.id}
                                 ref={(el) => (cardRefs.current[index] = el)}
                             >
-                                <StepCard step={step} isActive={activeStep === index} />
+                                <StepCard step={step} />
                             </div>
                         ))}
                     </div>
