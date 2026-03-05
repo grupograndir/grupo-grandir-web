@@ -4,6 +4,7 @@ import Transformation from './components/Transformation'
 import PainPoints from './components/PainPoints'
 import GrandirAnalytics from './components/GrandirAnalytics'
 import ServicesHero from './components/ServicesHero'
+import Methodology from './components/Methodology'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <PainPoints />
       <ServicesHero />
       <GrandirAnalytics />
+      <Methodology />
     </main>
   )
 }
