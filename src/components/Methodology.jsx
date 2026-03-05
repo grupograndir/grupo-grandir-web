@@ -5,7 +5,7 @@ const steps = [
     {
         id: 1,
         label: 'Proceso de Onboarding',
-        timeline: 'Semana 1-2',
+        timeline: 'Semana 1',
         title: 'Análisis y Onboarding',
         description: 'Analizamos a fondo tu operativa actual, flujos de trabajo, herramientas existentes y puntos de fricción. Mapeamos cada proceso para identificar exactamente dónde se pierde tiempo y dinero.',
         features: ['Auditoría operativa completa', 'Mapa de flujos de trabajo', 'Identificación de cuellos de botella', 'Informe de oportunidades'],
@@ -26,8 +26,8 @@ const steps = [
     },
     {
         id: 2,
-        label: 'Auditoría de Procesos',
-        timeline: 'Semana 2-3',
+        label: 'Definición de Estrategia',
+        timeline: 'Semana 2',
         title: 'Auditoría y Estrategia',
         description: 'Diseñamos la arquitectura de la solución ideal. Definimos qué automatizar, qué integrar y cómo orquestar todos los sistemas para que trabajen como un ecosistema cohesionado.',
         features: ['Diseño de arquitectura', 'Plan de automatizaciones', 'Estrategia de integración', 'Roadmap técnico'],
@@ -50,31 +50,8 @@ const steps = [
     },
     {
         id: 3,
-        label: 'Proceso de Diseño',
-        timeline: 'Semana 3-5',
-        title: 'Diseño UX/UI',
-        description: 'Construimos interfaces que tus equipos realmente quieran usar. Diseño funcional, limpio y orientado a la eficiencia operativa. Cada pantalla se valida contigo antes de pasar a desarrollo.',
-        features: ['Wireframes interactivos', 'Diseño UI premium', 'Validación con tu equipo', 'Prototipo navegable'],
-        icon: (
-            <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
-                <rect x="35" y="45" width="130" height="90" rx="8" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <rect x="35" y="45" width="130" height="20" rx="8" fill="currentColor" opacity="0.05" />
-                <circle cx="48" cy="55" r="3" fill="#FF2800" opacity="0.7" />
-                <circle cx="58" cy="55" r="3" fill="currentColor" opacity="0.3" />
-                <circle cx="68" cy="55" r="3" fill="currentColor" opacity="0.2" />
-                <rect x="50" y="80" width="45" height="40" rx="6" fill="#FF2800" opacity="0.1" />
-                <rect x="50" y="80" width="45" height="40" rx="6" stroke="#FF2800" strokeWidth="1" fill="none" opacity="0.3" />
-                <rect x="105" y="80" width="45" height="18" rx="4" fill="currentColor" opacity="0.06" />
-                <rect x="105" y="102" width="45" height="18" rx="4" fill="currentColor" opacity="0.06" />
-                <rect x="55" y="148" width="90" height="10" rx="5" fill="currentColor" opacity="0.1" />
-                <rect x="55" y="148" width="55" height="10" rx="5" fill="#FF2800" opacity="0.2" />
-            </svg>
-        ),
-    },
-    {
-        id: 4,
         label: 'Proceso de Desarrollo',
-        timeline: 'Semana 5-8',
+        timeline: 'Semana 3-6',
         title: 'Desarrollo e Implementación',
         description: 'Desarrollamos tu solución con tecnología de alto rendimiento. Despliegue progresivo, testing riguroso y formación a tu equipo incluida. Todo listo para escalar desde el día uno.',
         features: ['Desarrollo ágil por sprints', 'Integración con tus herramientas', 'Testing y QA completo', 'Formación y soporte'],
@@ -90,6 +67,29 @@ const steps = [
                 <path d="M135 75 L145 85 L155 65" stroke="#FF2800" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
                 <rect x="60" y="150" width="80" height="12" rx="6" fill="#FF2800" opacity="0.15" />
                 <rect x="75" y="153" width="50" height="6" rx="3" fill="#FF2800" opacity="0.4" />
+            </svg>
+        ),
+    },
+    {
+        id: 4,
+        label: 'Proceso de Diseño',
+        timeline: 'Semana 6-8',
+        title: 'Creación del Ecosistema',
+        description: 'Construimos interfaces que tus equipos realmente quieran usar. Diseño funcional, limpio y orientado a la eficiencia operativa. Cada pantalla se valida contigo antes de pasar a desarrollo.',
+        features: ['Wireframes interactivos', 'Diseño UI premium', 'Validación con tu equipo', 'Prototipo navegable'],
+        icon: (
+            <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
+                <rect x="35" y="45" width="130" height="90" rx="8" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
+                <rect x="35" y="45" width="130" height="20" rx="8" fill="currentColor" opacity="0.05" />
+                <circle cx="48" cy="55" r="3" fill="#FF2800" opacity="0.7" />
+                <circle cx="58" cy="55" r="3" fill="currentColor" opacity="0.3" />
+                <circle cx="68" cy="55" r="3" fill="currentColor" opacity="0.2" />
+                <rect x="50" y="80" width="45" height="40" rx="6" fill="#FF2800" opacity="0.1" />
+                <rect x="50" y="80" width="45" height="40" rx="6" stroke="#FF2800" strokeWidth="1" fill="none" opacity="0.3" />
+                <rect x="105" y="80" width="45" height="18" rx="4" fill="currentColor" opacity="0.06" />
+                <rect x="105" y="102" width="45" height="18" rx="4" fill="currentColor" opacity="0.06" />
+                <rect x="55" y="148" width="90" height="10" rx="5" fill="currentColor" opacity="0.1" />
+                <rect x="55" y="148" width="55" height="10" rx="5" fill="#FF2800" opacity="0.2" />
             </svg>
         ),
     },
@@ -198,7 +198,7 @@ const Methodology = () => {
                     className="text-center mb-20"
                 >
                     <span className="text-xs font-semibold tracking-[0.3em] uppercase text-secondary mb-6 block">
-                        Metodología
+                        Metodología Grandir
                     </span>
                     <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95] font-display mb-6">
                         Nuestra<br />
