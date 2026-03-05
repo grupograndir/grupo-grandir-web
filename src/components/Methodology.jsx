@@ -182,9 +182,11 @@ const Methodology = () => {
     };
 
     return (
-        <section className="relative py-32 overflow-hidden">
-            {/* Background */}
-            <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[200px] pointer-events-none" />
+        <section className="relative py-32">
+            {/* Background — clipped independently so it doesn't break sticky */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[200px]" />
+            </div>
 
             <div className="container mx-auto px-6 max-w-6xl relative z-10">
                 {/* Section Header */}
@@ -224,13 +226,13 @@ const Methodology = () => {
                                         key={step.id}
                                         onClick={() => scrollToStep(index)}
                                         className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group flex items-center gap-4 ${activeStep === index
-                                                ? 'bg-white text-black shadow-lg'
-                                                : 'bg-white/[0.03] text-secondary hover:bg-white/[0.06]'
+                                            ? 'bg-white text-black shadow-lg'
+                                            : 'bg-white/[0.03] text-secondary hover:bg-white/[0.06]'
                                             }`}
                                     >
                                         <span className={`text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${activeStep === index
-                                                ? 'bg-accent text-white'
-                                                : 'bg-white/[0.08] text-secondary'
+                                            ? 'bg-accent text-white'
+                                            : 'bg-white/[0.08] text-secondary'
                                             }`}>
                                             {step.id}
                                         </span>
