@@ -2,6 +2,7 @@ import React from 'react'
 import Hero from './components/Hero'
 import Transformation from './components/Transformation'
 import PainPoints from './components/PainPoints'
+import GrandirAnalytics from './components/GrandirAnalytics'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Hero />
       <Transformation />
       <PainPoints />
+      <GrandirAnalytics />
     </main>
   )
 }

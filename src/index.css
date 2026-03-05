@@ -30,3 +30,41 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Grandir Analytics Slider */
+.grandir-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+
+.grandir-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #FF2800;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(255, 40, 0, 0.3);
+  transition: box-shadow 0.2s ease;
+}
+
+.grandir-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 20px rgba(255, 40, 0, 0.5);
+}
+
+.grandir-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #FF2800;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(255, 40, 0, 0.3);
+}
