@@ -1,6 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
+const Slider = ({ label, value, onChange, min, max, suffix }) => (
+    <div className="mb-8">
+        <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium text-secondary tracking-wide">{label}</span>
+            <span className="text-lg font-bold text-white">{value}{suffix}</span>
+        </div>
+        <input
+            type="range"
+            min={min}
+            max={max}
+            value={value}
+            onChange={(e) => onChange(Number(e.target.value))}
+            className="grandir-slider w-full"
+        />
+    </div>
+);
+
 const GrandirAnalytics = () => {
     const [manualPercent, setManualPercent] = useState(12);
     const [hoursPerWeek, setHoursPerWeek] = useState(25);
@@ -19,24 +36,6 @@ const GrandirAnalytics = () => {
             efficiency: Math.min(efficiency, 30),
         };
     }, [manualPercent, hoursPerWeek, hourlyValue]);
-
-    const Slider = ({ label, value, onChange, min, max, suffix }) => (
-        <div className="mb-8">
-            <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-secondary tracking-wide">{label}</span>
-                <span className="text-lg font-bold text-white">{value}{suffix}</span>
-            </div>
-            <input
-                type="range"
-                min={min}
-                max={max}
-                value={value}
-                onChange={(e) => onChange(Number(e.target.value))}
-                className="grandir-slider w-full"
-                style={{ touchAction: 'none' }}
-            />
-        </div>
-    );
 
     return (
         <section className="relative py-32 overflow-hidden">
