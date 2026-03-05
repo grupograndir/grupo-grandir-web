@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 
 const features = [
     'INFRAESTRUCTURA A MEDIDA',
-    'INTEGRACIÓN CON TU STACK',
-    'PROPIEDAD DEL CÓDIGO',
+    'INTEGRACIÓN CON TUS HERRAMIENTAS',
+    'PROPIEDAD INTELECTUAL INTACTA',
 ];
 
 const ServicesHero = () => {
@@ -24,7 +24,7 @@ const ServicesHero = () => {
                     className="flex justify-center mb-10"
                 >
                     <span className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-full px-5 py-2 text-[11px] font-semibold tracking-[0.25em] uppercase text-secondary">
-                        Grupo Grandir · Arquitectura Cloud
+                        Grupo Grandir · Arquitectura a medida
                     </span>
                 </motion.div>
 
@@ -38,7 +38,7 @@ const ServicesHero = () => {
                 >
                     <span className="text-white">Desarrollo de SaaS a medida</span>
                     <br />
-                    <span className="services-text-gradient">para automatizar tu empresa.</span>
+                    <span className="services-text-gradient">para reducir tus costes.</span>
                 </motion.h2>
 
                 {/* Description */}
@@ -49,8 +49,8 @@ const ServicesHero = () => {
                     transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     className="text-base md:text-lg text-secondary text-center max-w-2xl mx-auto leading-relaxed mb-6"
                 >
-                    Diseñamos y construimos software que elimina el trabajo manual: atención al cliente, administración y coordinación interna{' '}
-                    <span className="text-white font-semibold">en un solo ecosistema inteligente.</span>
+                    Diseñamos el software que necesitas para eliminar el trabajo manual repetitivo, todo ello dentro de un{' '}
+                    <span className="text-white font-semibold">  único ecosistema propio.</span>
                 </motion.p>
 
                 {/* Accent highlight line */}
@@ -62,7 +62,7 @@ const ServicesHero = () => {
                     className="text-center text-sm md:text-base mb-10"
                 >
                     <span className="text-accent">
-                        Especialistas en <strong>B2B, clínicas y retail</strong> que necesitan escalar sus operaciones.
+                        Especialistas en <strong>B2B, logística, transportes y construcción</strong> que necesitan escalar sus operaciones y eliminar costes innecesarios.
                     </span>
                 </motion.p>
 
@@ -79,7 +79,7 @@ const ServicesHero = () => {
                         whileTap={{ scale: 0.95 }}
                         className="relative overflow-hidden bg-accent text-white px-10 py-4 rounded-full text-base font-bold shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:shadow-[0_0_50px_rgba(255,40,0,0.5)] transition-all group"
                     >
-                        <span className="relative z-10">Auditar mis procesos</span>
+                        <span className="relative z-10">Agilizar mis procesos</span>
                         <motion.div
                             initial={{ x: "-150%", skewX: -25 }}
                             animate={{ x: "150%" }}
