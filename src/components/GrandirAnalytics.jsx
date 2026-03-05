@@ -33,6 +33,7 @@ const GrandirAnalytics = () => {
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
                 className="grandir-slider w-full"
+                style={{ touchAction: 'none' }}
             />
         </div>
     );
@@ -55,8 +56,8 @@ const GrandirAnalytics = () => {
                         Grandir Analytics
                     </span>
                     <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95] font-display mb-6">
-                        El agujero negro de<br />
-                        <span className="text-accent">la ineficiencia.</span>
+                        Calcula la ineficiencia<br />
+                        <span className="text-accent">real de tu empresa.</span>
                     </h2>
                     <p className="text-secondary text-base md:text-lg max-w-lg mx-auto leading-relaxed">
                         Calcula el capital y el tiempo que la gravedad operativa de tu empresa devora anualmente en tareas que ya no deberían ser manuales.
@@ -73,7 +74,7 @@ const GrandirAnalytics = () => {
                         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <Slider
-                            label="Nivel de Operativa Manual"
+                            label="Porcentaje de Operativa Manual"
                             value={manualPercent}
                             onChange={setManualPercent}
                             min={1}
@@ -81,7 +82,7 @@ const GrandirAnalytics = () => {
                             suffix="%"
                         />
                         <Slider
-                            label="Horas Drenadas / Semana"
+                            label="Horas Empleadas / Semana"
                             value={hoursPerWeek}
                             onChange={setHoursPerWeek}
                             min={1}
@@ -89,7 +90,7 @@ const GrandirAnalytics = () => {
                             suffix="h"
                         />
                         <Slider
-                            label="Valor Estratégico Hora"
+                            label="Valor / Hora"
                             value={hourlyValue}
                             onChange={setHourlyValue}
                             min={10}
@@ -99,7 +100,7 @@ const GrandirAnalytics = () => {
 
                         <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 mt-4">
                             <p className="text-xs text-secondary leading-relaxed">
-                                Esta simulación incluye fricción operativa directa y coste de oportunidad. No incluye pérdida de ventas por falta de respuesta inmediata.
+                                Esta simulación calcula únicamente la pérdida en operativa directa y coste de oportunidad. No incluye pérdida de ventas por falta de respuesta inmediata o pérdida de leads por mala gestión.
                             </p>
                         </div>
                     </motion.div>
@@ -139,7 +140,7 @@ const GrandirAnalytics = () => {
                             <div className="grid grid-cols-2 gap-3 mb-6">
                                 <div className="bg-white/[0.04] border border-white/[0.06] rounded-xl p-4">
                                     <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-secondary block mb-1">
-                                        Mensual
+                                        Pérdida Mensual
                                     </span>
                                     <span className="text-xl font-bold text-white">
                                         {calculations.monthly} €
@@ -147,7 +148,7 @@ const GrandirAnalytics = () => {
                                 </div>
                                 <div className="bg-accent/10 border border-accent/20 rounded-xl p-4">
                                     <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-accent block mb-1">
-                                        Eficacia Grandir
+                                        Eficiencia con Grandir
                                     </span>
                                     <span className="text-xl font-bold text-accent">
                                         +{calculations.efficiency}%
