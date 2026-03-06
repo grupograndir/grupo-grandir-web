@@ -52,9 +52,9 @@ const steps = [
         id: 3,
         label: 'Proceso de Desarrollo',
         timeline: 'Semana 3-6',
-        title: 'Desarrollo e Implementación',
-        description: 'Desarrollamos tu solución con tecnología de alto rendimiento. Despliegue progresivo, testing riguroso y formación a tu equipo incluida. Todo listo para escalar desde el día uno.',
-        features: ['Desarrollo ágil por sprints', 'Integración con tus herramientas', 'Testing y QA completo', 'Formación y soporte'],
+        title: 'Diseño y Desarrollo',
+        description: 'Desarrollamos tu solución con tecnología de alto rendimiento. Despliegue progresivo, testing riguroso y personalización a medida. Todo listo para escalar desde el día uno.',
+        features: ['Desarrollo ágil por sprints', 'Integración con tus herramientas', 'Testing y QA completo', 'Personalización'],
         icon: (
             <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
                 <rect x="30" y="40" width="140" height="100" rx="8" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
@@ -72,11 +72,11 @@ const steps = [
     },
     {
         id: 4,
-        label: 'Proceso de Diseño',
-        timeline: 'Semana 6-8',
-        title: 'Creación del Ecosistema',
-        description: 'Construimos interfaces que tus equipos realmente quieran usar. Diseño funcional, limpio y orientado a la eficiencia operativa. Cada pantalla se valida contigo antes de pasar a desarrollo.',
-        features: ['Wireframes interactivos', 'Diseño UI premium', 'Validación con tu equipo', 'Prototipo navegable'],
+        label: 'Proceso de Implementación',
+        timeline: 'Semana 7',
+        title: 'Implementación del Ecosistema',
+        description: 'Lanzamos tu solución y te acompañamos en cada paso. Formación a tu equipo, soporte continuo y optimización constante para asegurar que alcances tus objetivos de eficiencia desde el primer día.',
+        features: ['Lanzamiento guiado', 'Formación a usuarios', 'Soporte prioritario', 'Optimización continua'],
         icon: (
             <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
                 <rect x="35" y="45" width="130" height="90" rx="8" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
