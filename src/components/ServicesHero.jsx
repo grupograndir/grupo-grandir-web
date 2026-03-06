@@ -24,7 +24,7 @@ const ServicesHero = () => {
                     className="flex justify-center mb-10"
                 >
                     <span className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-full px-5 py-2 text-[11px] font-semibold tracking-[0.25em] uppercase text-secondary">
-                        Grupo Grandir · Arquitectura a medida
+                        LA SOLUCIÓN · GRUPO GRANDIR
                     </span>
                 </motion.div>
 

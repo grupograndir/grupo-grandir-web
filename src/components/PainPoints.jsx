@@ -455,7 +455,7 @@ const PainPoints = () => {
                         className="text-center mb-10"
                     >
                         <span className="text-xs font-semibold tracking-[0.3em] uppercase text-secondary mb-4 block">
-                            ¿Te suena familiar?
+                            EL PROBLEMA
                         </span>
                         <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-[0.95] font-display mb-4">
                             ¿Por qué estás<br />
