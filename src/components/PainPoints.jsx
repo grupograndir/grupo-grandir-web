@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
 /* ======================================================
-   Pain Points — Scroll-pinned single card with animations
+   Pain Points — Methodology-style natural scroll
    ====================================================== */
-
 
 /* ---- Animation: Manual repetitive tasks ---- */
 const ManualTasksAnimation = ({ isActive }) => {
@@ -356,6 +355,9 @@ const AnimationForType = ({ type, isActive }) => {
     }
 };
 
+/* ======================================================
+   Pain Points Data
+   ====================================================== */
 const painPoints = [
     {
         id: 1,
@@ -400,215 +402,200 @@ const painPoints = [
 ];
 
 /* ======================================================
-   Main Section — Full screen-lock scroll
+   PainPoint Card — individual scrollable card
    ====================================================== */
-const PainPoints = () => {
-    const sectionRef = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [isLocked, setIsLocked] = useState(false);
-    const indexRef = useRef(0);
-    const lockedRef = useRef(false);
-    const cooldownRef = useRef(false);
-
-    useEffect(() => {
-        const section = sectionRef.current;
-        if (!section) return;
-
-        const lock = () => {
-            if (!lockedRef.current) {
-                lockedRef.current = true;
-                setIsLocked(true);
-                document.body.style.overflow = 'hidden';
-            }
-        };
-
-        const unlock = () => {
-            if (lockedRef.current) {
-                lockedRef.current = false;
-                setIsLocked(false);
-                document.body.style.overflow = '';
-            }
-        };
-
-        const handleScroll = () => {
-            const rect = section.getBoundingClientRect();
-            const viewportH = window.innerHeight;
-
-            // Lock when the section's top reaches the top of viewport
-            if (rect.top <= 0 && rect.bottom > viewportH) {
-                lock();
-            }
-        };
-
-        const handleWheel = (e) => {
-            if (!lockedRef.current) return;
-
-            e.preventDefault();
-
-            if (cooldownRef.current) return;
-
-            const direction = e.deltaY > 0 ? 1 : -1;
-            const currentIdx = indexRef.current;
-
-            // At first item scrolling up → unlock and let page scroll
-            if (direction < 0 && currentIdx === 0) {
-                unlock();
-                return;
-            }
-
-            // At last item scrolling down → unlock and scroll past section
-            if (direction > 0 && currentIdx === painPoints.length - 1) {
-                unlock();
-                const section = sectionRef.current;
-                if (section) {
-                    const sectionBottom = section.getBoundingClientRect().bottom + window.scrollY;
-                    window.scrollTo({ top: sectionBottom, behavior: 'smooth' });
-                }
-                return;
-            }
-
-            // Step forward/backward
-            cooldownRef.current = true;
-            const nextIdx = Math.max(0, Math.min(painPoints.length - 1, currentIdx + direction));
-            indexRef.current = nextIdx;
-            setActiveIndex(nextIdx);
-
-            setTimeout(() => { cooldownRef.current = false; }, 600);
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('wheel', handleWheel, { passive: false });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('wheel', handleWheel);
-            document.body.style.overflow = '';
-        };
-    }, []);
-
-    const activePoint = painPoints[activeIndex];
-    const isLastSlide = activeIndex === painPoints.length - 1;
+const PainPointCard = ({ point }) => {
+    const cardRef = useRef(null);
+    const isInView = useInView(cardRef, { once: false, amount: 0.4 });
 
     return (
-        <section
-            ref={sectionRef}
-            className="relative bg-background"
-            style={{ height: '200vh' }}
+        <motion.div
+            ref={cardRef}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10"
         >
-            <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center z-10">
-                {/* Subtle background grid pattern */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                    style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+            {/* Tag */}
+            <div className="flex items-center gap-3 mb-6">
+                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
+                    {point.tag}
+                </span>
+                <div className="h-[1px] flex-1 bg-white/[0.06]" />
+            </div>
 
-                <div className="container mx-auto px-6 max-w-6xl relative z-10">
-                    {/* Section Header */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter mb-4 font-display text-gradient">
-                            ¿POR QUÉ ESTÁS PERDIENDO <br className="hidden md:block" /> TIEMPO Y DINERO?
-                        </h2>
-                        <p className="text-secondary text-base md:text-lg max-w-2xl mx-auto">
-                            La mayoría de las empresas pierden el 30% de sus ingresos por procesos ineficientes. ¿Cuál es tu caso?
-                        </p>
-                    </motion.div>
+            {/* Title */}
+            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+                {point.title}
+            </h3>
 
-                    {/* Step indicators */}
-                    <div className="flex items-center justify-center gap-2 mb-8">
-                        {painPoints.map((_, i) => (
-                            <div
-                                key={i}
-                                className={`h-1 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-8 bg-accent' : 'w-2 bg-white/10'
-                                    }`}
-                            />
-                        ))}
-                    </div>
+            {/* Description */}
+            <p className="text-secondary text-sm md:text-base leading-relaxed mb-8">
+                {point.description}
+            </p>
 
-                    {/* Main card — fixed height */}
-                    <div className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10 max-w-4xl mx-auto">
-                        <AnimatePresence mode="wait">
+            {/* Animation */}
+            <div className="mb-8 h-56">
+                <AnimationForType type={point.animation} isActive={isInView} />
+            </div>
+
+            {/* Stat */}
+            <div className="flex items-baseline gap-2 px-4 py-3 bg-red-500/5 border border-red-500/10 rounded-xl inline-flex">
+                <span className="text-2xl font-extrabold text-red-400 font-mono">
+                    {point.stat.value}
+                </span>
+                <span className="text-xs text-red-400/60">
+                    {point.stat.label}
+                </span>
+            </div>
+        </motion.div>
+    );
+};
+
+/* ======================================================
+   Main Section — Methodology-style natural scroll
+   ====================================================== */
+const PainPoints = () => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const cardRefs = useRef([]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const index = cardRefs.current.indexOf(entry.target);
+                        if (index !== -1) setActiveIndex(index);
+                    }
+                });
+            },
+            { threshold: 0.4, rootMargin: '-30% 0px -30% 0px' }
+        );
+
+        cardRefs.current.forEach((ref) => {
+            if (ref) observer.observe(ref);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    const scrollToPoint = (index) => {
+        cardRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    return (
+        <section className="relative py-32 bg-background overflow-hidden">
+            {/* Subtle background grid pattern */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+            <div className="container mx-auto px-6 max-w-6xl relative z-10">
+                {/* Section Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-center mb-20"
+                >
+                    <span className="text-xs font-semibold tracking-[0.3em] uppercase text-secondary mb-6 block">
+                        ¿Te suena familiar?
+                    </span>
+                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95] font-display mb-6">
+                        ¿Por qué estás<br />
+                        <span className="text-accent">perdiendo dinero?</span>
+                    </h2>
+                    <p className="text-secondary text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+                        La mayoría de las empresas pierden el 30% de sus ingresos por procesos ineficientes. ¿Cuál es tu caso?
+                    </p>
+                </motion.div>
+
+                {/* Two-column layout — same as Methodology */}
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative">
+                    {/* Left Sidebar — Sticky Navigation */}
+                    <div className="lg:w-[320px] shrink-0">
+                        <div className="lg:sticky lg:top-24" style={{ position: '-webkit-sticky' }}>
                             <motion.div
-                                key={activePoint.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6 }}
+                                className="space-y-2"
                             >
-                                {/* Tag + Counter */}
-                                <div className="flex items-center justify-between mb-6">
-                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
-                                        {activePoint.tag}
-                                    </span>
-                                    <span className="text-[10px] text-white/30 font-mono">
-                                        {activeIndex + 1} / {painPoints.length}
-                                    </span>
-                                </div>
-
-                                {/* Content grid — fixed height */}
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start" style={{ minHeight: '280px' }}>
-                                    {/* Left: Text */}
-                                    <div className="flex flex-col justify-between h-full" style={{ minHeight: '260px' }}>
-                                        <div>
-                                            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
-                                                {activePoint.title}
-                                            </h3>
-                                            <p className="text-secondary text-sm md:text-base leading-relaxed mb-6">
-                                                {activePoint.description}
-                                            </p>
-                                        </div>
-                                        {/* Stat */}
-                                        <div className="flex items-baseline gap-2 px-4 py-3 bg-red-500/5 border border-red-500/10 rounded-xl inline-flex">
-                                            <span className="text-2xl font-extrabold text-red-400 font-mono">
-                                                {activePoint.stat.value}
-                                            </span>
-                                            <span className="text-xs text-red-400/60">
-                                                {activePoint.stat.label}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Right: Animation — fixed height */}
-                                    <div className="h-64">
-                                        <AnimationForType type={activePoint.animation} isActive={true} />
-                                    </div>
-                                </div>
-
-                                {/* CTA on last slide */}
-                                {isLastSlide && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="mt-8 pt-6 border-t border-white/[0.04] text-center"
+                                {painPoints.map((point, index) => (
+                                    <button
+                                        key={point.id}
+                                        onClick={() => scrollToPoint(index)}
+                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group flex items-center gap-4 ${activeIndex === index
+                                                ? 'bg-white text-black shadow-lg'
+                                                : 'bg-white/[0.03] text-secondary hover:bg-white/[0.06]'
+                                            }`}
                                     >
-                                        <p className="text-secondary text-sm mb-4">¿Te sientes identificado? Podemos solucionarlo.</p>
-                                        <a
-                                            href="#contacto"
-                                            className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105"
-                                        >
-                                            Trabajemos juntos
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                                        </a>
-                                    </motion.div>
-                                )}
+                                        <span className={`text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${activeIndex === index
+                                                ? 'bg-accent text-white'
+                                                : 'bg-white/[0.08] text-secondary'
+                                            }`}>
+                                            {point.id}
+                                        </span>
+                                        <span className={`text-sm font-semibold transition-colors duration-300 ${activeIndex === index ? 'text-black' : 'text-white'
+                                            }`}>
+                                            {point.tag}
+                                        </span>
+                                    </button>
+                                ))}
                             </motion.div>
-                        </AnimatePresence>
+
+                            {/* Progress indicator */}
+                            <div className="mt-8 px-5 hidden lg:block">
+                                <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                                    <motion.div
+                                        className="h-full bg-accent rounded-full"
+                                        animate={{ width: `${((activeIndex + 1) / painPoints.length) * 100}%` }}
+                                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                                    />
+                                </div>
+                                <p className="text-[10px] text-secondary/50 mt-2 tracking-wider uppercase">
+                                    Problema {activeIndex + 1} de {painPoints.length}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Scroll hint */}
-                    {!isLastSlide && (
+                    {/* Right Column — Scrollable Cards */}
+                    <div className="flex-1 space-y-8">
+                        {painPoints.map((point, index) => (
+                            <div
+                                key={point.id}
+                                ref={(el) => (cardRefs.current[index] = el)}
+                            >
+                                <PainPointCard point={point} />
+                            </div>
+                        ))}
+
+                        {/* CTA after all cards */}
                         <motion.div
-                            animate={{ y: [0, 6, 0] }}
-                            transition={{ repeat: Infinity, duration: 2 }}
-                            className="text-center mt-6"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.3 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10 text-center"
                         >
-                            <span className="text-[10px] text-white/20">Desliza para ver más</span>
+                            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+                                ¿Te sientes identificado?
+                            </h3>
+                            <p className="text-secondary text-sm md:text-base leading-relaxed mb-6 max-w-md mx-auto">
+                                Todos estos problemas tienen una solución común: digitalizar, automatizar e integrar tu operativa con tecnología a medida.
+                            </p>
+                            <a
+                                href="#contacto"
+                                className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105"
+                            >
+                                Trabajemos juntos
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                            </a>
                         </motion.div>
-                    )}
+                    </div>
                 </div>
             </div>
         </section>
