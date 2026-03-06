@@ -1,7 +1,18 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const rotatingWords = ['VELOCIDAD', 'EFICIENCIA', 'CONTROL', 'RENTABILIDAD', 'CRECIMIENTO'];
 
 const Hero = () => {
+    const [wordIndex, setWordIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
             {/* Background Glows */}
@@ -37,10 +48,30 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-5xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-[0.9] font-display text-gradient"
+                    className="text-5xl md:text-8xl font-extrabold tracking-tighter mb-8 leading-[0.9] font-display"
                 >
-                    MENOS COSTES. <br />
-                    <span className="text-white">MÁS VELOCIDAD.</span>
+                    <span className="text-gradient">MENOS COSTES.</span>
+                    <br />
+                    <span className="inline-flex items-baseline mt-2" style={{ marginTop: '0.15em' }}>
+                        <span className="text-white">MÁS&nbsp;</span>
+                        <span className="relative inline-block" style={{ minWidth: '5ch' }}>
+                            {/* Red glow behind rotating word */}
+                            <span className="absolute inset-0 blur-[40px] bg-accent/30 rounded-full pointer-events-none" />
+                            <AnimatePresence mode="wait">
+                                <motion.span
+                                    key={rotatingWords[wordIndex]}
+                                    initial={{ y: 30, opacity: 0, filter: 'blur(8px)' }}
+                                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                                    exit={{ y: -30, opacity: 0, filter: 'blur(8px)' }}
+                                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                    className="inline-block rotating-word-gradient"
+                                >
+                                    {rotatingWords[wordIndex]}
+                                </motion.span>
+                            </AnimatePresence>
+                            <span className="rotating-word-gradient">.</span>
+                        </span>
+                    </span>
                 </motion.h1>
 
                 <motion.p

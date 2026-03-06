@@ -37,6 +37,13 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.rotating-word-gradient {
+  background: linear-gradient(135deg, #FF4D2A 0%, #FF2800 40%, #FF6B4F 70%, #FFFFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 40, 0, 0.4));
+}
+
 /* Grandir Analytics Slider */
 .grandir-slider {
   -webkit-appearance: none;
