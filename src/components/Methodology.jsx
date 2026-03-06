@@ -593,6 +593,17 @@ const Methodology = () => {
                                     Fase {activeStep + 1} de {steps.length}
                                 </p>
                             </div>
+
+                            {/* CTA */}
+                            <div className="mt-8 px-5 hidden lg:block">
+                                <a
+                                    href="#contacto"
+                                    className="w-full inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105 text-sm"
+                                >
+                                    Quiero empezar ya
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
