@@ -1,5 +1,85 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+/* ---- Animated Code Editor for Step 3 ---- */
+const codeLines = [
+    { num: 1, tokens: [{ text: 'import', color: '#FF6B4F' }, { text: ' { ', color: '#fff' }, { text: 'GrandirEngine', color: '#FF2800' }, { text: ' } ', color: '#fff' }, { text: 'from', color: '#FF6B4F' }, { text: " '@grandir/core'", color: '#CE9178' }] },
+    { num: 2, tokens: [{ text: 'import', color: '#FF6B4F' }, { text: ' { ', color: '#fff' }, { text: 'Automations', color: '#FF2800' }, { text: ' } ', color: '#fff' }, { text: 'from', color: '#FF6B4F' }, { text: " '@grandir/flow'", color: '#CE9178' }] },
+    { num: 3, tokens: [] },
+    { num: 4, tokens: [{ text: 'const', color: '#FF6B4F' }, { text: ' pipeline ', color: '#fff' }, { text: '= ', color: '#fff' }, { text: 'new', color: '#FF6B4F' }, { text: ' GrandirEngine', color: '#FF2800' }, { text: '({', color: '#fff' }] },
+    { num: 5, tokens: [{ text: '  client', color: '#9CDCFE' }, { text: ': ', color: '#fff' }, { text: "'enterprise'", color: '#CE9178' }, { text: ',', color: '#fff' }] },
+    { num: 6, tokens: [{ text: '  modules', color: '#9CDCFE' }, { text: ': [', color: '#fff' }, { text: "'crm'", color: '#CE9178' }, { text: ', ', color: '#fff' }, { text: "'invoicing'", color: '#CE9178' }, { text: ', ', color: '#fff' }, { text: "'logistics'", color: '#CE9178' }, { text: ']', color: '#fff' }] },
+    { num: 7, tokens: [{ text: '})', color: '#fff' }] },
+    { num: 8, tokens: [] },
+    { num: 9, tokens: [{ text: 'await', color: '#FF6B4F' }, { text: ' pipeline', color: '#fff' }, { text: '.deploy', color: '#DCDCAA' }, { text: '()', color: '#fff' }] },
+];
+
+const CodeEditorAnimation = () => {
+    const [visibleLines, setVisibleLines] = useState(0);
+
+    useEffect(() => {
+        let line = 0;
+        const interval = setInterval(() => {
+            line += 1;
+            if (line > codeLines.length) {
+                line = 0;
+                setVisibleLines(0);
+                return;
+            }
+            setVisibleLines(line);
+        }, 600);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="w-full h-full rounded-xl overflow-hidden bg-[#0D0D0D] border border-white/[0.06] font-mono text-[10px] md:text-xs flex">
+            {/* Sidebar */}
+            <div className="w-8 shrink-0 bg-white/[0.02] border-r border-white/[0.04] flex flex-col items-center pt-3 gap-3">
+                <div className="w-3 h-3 rounded-sm bg-accent/30" />
+                <div className="w-3 h-3 rounded-sm bg-white/10" />
+                <div className="w-3 h-3 rounded-sm bg-white/10" />
+            </div>
+            {/* Editor */}
+            <div className="flex-1 p-3 overflow-hidden">
+                {/* Tab bar */}
+                <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/[0.04]">
+                    <div className="flex gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-accent/60" />
+                        <div className="w-2 h-2 rounded-full bg-white/20" />
+                        <div className="w-2 h-2 rounded-full bg-white/20" />
+                    </div>
+                    <span className="text-[9px] text-white/40 ml-2">pipeline.config.js</span>
+                </div>
+                {/* Code lines */}
+                <div className="space-y-0.5">
+                    {codeLines.map((line, i) => (
+                        <motion.div
+                            key={line.num}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={i < visibleLines ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                            className="flex items-center gap-2 leading-relaxed"
+                        >
+                            <span className="w-4 text-right text-white/15 select-none shrink-0">{line.num}</span>
+                            <div className="flex flex-wrap">
+                                {line.tokens.map((token, j) => (
+                                    <span key={j} style={{ color: token.color }}>{token.text}</span>
+                                ))}
+                                {i === visibleLines - 1 && line.tokens.length > 0 && (
+                                    <motion.span
+                                        animate={{ opacity: [1, 0] }}
+                                        transition={{ repeat: Infinity, duration: 0.8 }}
+                                        className="inline-block w-[6px] h-[14px] bg-accent ml-0.5"
+                                    />
+                                )}
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const steps = [
     {
@@ -55,20 +135,7 @@ const steps = [
         title: 'Diseño y Desarrollo',
         description: 'Desarrollamos tu solución con tecnología de alto rendimiento. Despliegue progresivo, testing riguroso y personalización a medida. Todo listo para escalar desde el día uno.',
         features: ['Desarrollo ágil por sprints', 'Integración con tus herramientas', 'Testing y QA completo', 'Personalización'],
-        icon: (
-            <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
-                <rect x="30" y="40" width="140" height="100" rx="8" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <rect x="42" y="55" width="50" height="6" rx="3" fill="#FF2800" opacity="0.4" />
-                <rect x="52" y="67" width="70" height="6" rx="3" fill="currentColor" opacity="0.15" />
-                <rect x="52" y="79" width="55" height="6" rx="3" fill="currentColor" opacity="0.1" />
-                <rect x="42" y="91" width="40" height="6" rx="3" fill="#FF2800" opacity="0.3" />
-                <rect x="52" y="103" width="65" height="6" rx="3" fill="currentColor" opacity="0.15" />
-                <rect x="52" y="115" width="45" height="6" rx="3" fill="currentColor" opacity="0.1" />
-                <path d="M135 75 L145 85 L155 65" stroke="#FF2800" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
-                <rect x="60" y="150" width="80" height="12" rx="6" fill="#FF2800" opacity="0.15" />
-                <rect x="75" y="153" width="50" height="6" rx="3" fill="#FF2800" opacity="0.4" />
-            </svg>
-        ),
+        icon: 'code-editor',
     },
     {
         id: 4,
@@ -122,17 +189,23 @@ const StepCard = ({ step }) => (
         </p>
 
         {/* Illustration */}
-        <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
-            <motion.div
-                initial={{ scale: 0.85, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.15 }}
-                className="w-40 h-40"
-            >
-                {step.icon}
-            </motion.div>
-        </div>
+        {step.icon === 'code-editor' ? (
+            <div className="mb-8 h-56">
+                <CodeEditorAnimation />
+            </div>
+        ) : (
+            <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
+                <motion.div
+                    initial={{ scale: 0.85, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.15 }}
+                    className="w-40 h-40"
+                >
+                    {step.icon}
+                </motion.div>
+            </div>
+        )}
 
         {/* Features grid */}
         <div className="grid grid-cols-2 gap-3">
