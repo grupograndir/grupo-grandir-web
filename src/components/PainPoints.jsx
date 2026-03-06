@@ -8,30 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const painPoints = [
     {
         id: 1,
-        tag: 'Operaciones',
-        title: 'Procesos manuales que devoran horas',
-        description: 'Tu equipo pierde cientos de horas al mes en tareas que deberían estar automatizadas: copiar datos entre hojas de cálculo, generar informes a mano, enviar correos uno a uno. Es tiempo que nunca vuelve.',
-        stat: { value: '72%', label: 'del tiempo en tareas repetitivas' },
-        animation: 'manual-tasks',
-    },
-    {
-        id: 2,
-        tag: 'Tecnología',
-        title: 'Herramientas desconectadas entre sí',
-        description: 'CRM por un lado, facturación por otro, el ERP en su mundo. Cada herramienta en un silo. La información no fluye, se duplica, se pierde. Y tú pagas licencias de todo sin sacarle partido a nada.',
-        stat: { value: '€2.400', label: '/mes en apps infrautilizadas' },
-        animation: 'disconnected-tools',
-    },
-    {
-        id: 3,
-        tag: 'Control',
-        title: 'Cero visibilidad sobre tu negocio',
-        description: 'No tienes un panel donde ver qué pasa en tu empresa en tiempo real. Las decisiones se toman con datos de la semana pasada — o peor, por intuición. Mientras tú esperas, la competencia ya actuó.',
-        stat: { value: '5 días', label: 'de retraso medio en datos' },
-        animation: 'no-visibility',
-    },
-    {
-        id: 4,
         tag: 'Crecimiento',
         title: 'Escalar significa contratar más',
         description: 'Cada vez que crece tu volumen, necesitas contratar. Más personas, más coordinación, más errores. Tu modelo de crecimiento es lineal cuando debería ser exponencial.',
@@ -39,12 +15,36 @@ const painPoints = [
         animation: 'scaling-cost',
     },
     {
-        id: 5,
+        id: 2,
+        tag: 'Operaciones',
+        title: 'Procesos manuales que devoran horas',
+        description: 'Tu equipo pierde cientos de horas al mes en tareas que deberían estar automatizadas: copiar datos entre hojas de cálculo, generar informes a mano, enviar correos uno a uno. Es tiempo que nunca vuelve.',
+        stat: { value: '72%', label: 'del tiempo en tareas repetitivas' },
+        animation: 'manual-tasks',
+    },
+    {
+        id: 3,
         tag: 'Competitividad',
         title: 'Tu competencia ya se ha digitalizado',
         description: 'Mientras sigues con procesos del 2015, tus competidores automatizan, integran, y responden 10 veces más rápido. La brecha tecnológica crece cada día que pasa sin actuar.',
         stat: { value: '-40%', label: 'de competitividad cada año' },
         animation: 'competition',
+    },
+    {
+        id: 4,
+        tag: 'Control',
+        title: 'Cero visibilidad sobre tu negocio',
+        description: 'No tienes un panel donde ver qué pasa en tu empresa en tiempo real. Las decisiones se toman con datos de la semana pasada — o peor, por intuición. Mientras tú esperas, la competencia ya actuó.',
+        stat: { value: '5 días', label: 'de retraso medio en datos' },
+        animation: 'no-visibility',
+    },
+    {
+        id: 5,
+        tag: 'Tecnología',
+        title: 'Herramientas desconectadas entre sí',
+        description: 'CRM por un lado, facturación por otro, el ERP en su mundo. Cada herramienta en un silo. La información no fluye, se duplica, se pierde. Y tú pagas licencias de todo sin sacarle partido a nada.',
+        stat: { value: '€2.400', label: '/mes en apps infrautilizadas' },
+        animation: 'disconnected-tools',
     },
 ];
 
@@ -405,6 +405,7 @@ const PainPoints = () => {
     const sectionRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isStuck, setIsStuck] = useState(false);
+    const cooldownRef = useRef(false);
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -412,33 +413,62 @@ const PainPoints = () => {
 
         const handleScroll = () => {
             const rect = section.getBoundingClientRect();
-            const sectionTop = rect.top;
             const sectionHeight = rect.height;
             const viewportH = window.innerHeight;
-
-            // Are we inside the pinned range?
-            const pinStart = 0;
+            const scrolledIntoSection = -rect.top;
             const pinEnd = sectionHeight - viewportH;
-            const scrolledIntoSection = -sectionTop;
 
-            if (sectionTop <= 0 && scrolledIntoSection < pinEnd) {
+            if (rect.top <= 0 && scrolledIntoSection < pinEnd) {
                 setIsStuck(true);
-                const progress = scrolledIntoSection / pinEnd;
-                const idx = Math.min(
-                    Math.floor(progress * painPoints.length),
-                    painPoints.length - 1
-                );
-                setActiveIndex(idx);
             } else {
                 setIsStuck(false);
             }
         };
 
+        const handleWheel = (e) => {
+            const rect = section.getBoundingClientRect();
+            const sectionHeight = rect.height;
+            const viewportH = window.innerHeight;
+            const scrolledIntoSection = -rect.top;
+            const pinEnd = sectionHeight - viewportH;
+
+            // Only intercept when section is in the pinned zone
+            if (rect.top > 0 || scrolledIntoSection >= pinEnd) return;
+
+            if (cooldownRef.current) {
+                e.preventDefault();
+                return;
+            }
+
+            const direction = e.deltaY > 0 ? 1 : -1;
+
+            // At first item scrolling up → let page scroll naturally
+            if (direction < 0 && activeIndex === 0) return;
+            // At last item scrolling down → let page scroll naturally
+            if (direction > 0 && activeIndex === painPoints.length - 1) return;
+
+            e.preventDefault();
+            cooldownRef.current = true;
+
+            setActiveIndex((prev) => {
+                const next = prev + direction;
+                return Math.max(0, Math.min(painPoints.length - 1, next));
+            });
+
+            setTimeout(() => { cooldownRef.current = false; }, 700);
+        };
+
         window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+        window.addEventListener('wheel', handleWheel, { passive: false });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('wheel', handleWheel);
+        };
+    }, [activeIndex]);
 
     const activePoint = painPoints[activeIndex];
+    const isLastSlide = activeIndex === painPoints.length - 1;
 
     return (
         <section
@@ -526,18 +556,39 @@ const PainPoints = () => {
                                         <AnimationForType type={activePoint.animation} isActive={true} />
                                     </div>
                                 </div>
+
+                                {/* CTA on last slide */}
+                                {isLastSlide && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.3, duration: 0.5 }}
+                                        className="mt-8 pt-6 border-t border-white/[0.04] text-center"
+                                    >
+                                        <p className="text-secondary text-sm mb-4">¿Te sientes identificado? Podemos solucionarlo.</p>
+                                        <a
+                                            href="#contacto"
+                                            className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105"
+                                        >
+                                            Trabajemos juntos
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                                        </a>
+                                    </motion.div>
+                                )}
                             </motion.div>
                         </AnimatePresence>
                     </div>
 
                     {/* Scroll hint */}
-                    <motion.div
-                        animate={{ y: [0, 6, 0] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="text-center mt-6"
-                    >
-                        <span className="text-[10px] text-white/20">Desliza para ver más</span>
-                    </motion.div>
+                    {!isLastSlide && (
+                        <motion.div
+                            animate={{ y: [0, 6, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="text-center mt-6"
+                        >
+                            <span className="text-[10px] text-white/20">Desliza para ver más</span>
+                        </motion.div>
+                    )}
                 </div>
             </div>
         </section>
