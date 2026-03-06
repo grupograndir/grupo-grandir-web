@@ -46,19 +46,19 @@ const FAQItem = ({ faq, index, isOpen, onToggle }) => {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
         >
-            <div
-                onMouseEnter={onToggle}
-                className={`w-full text-left group transition-all duration-400 cursor-pointer ${isOpen
-                    ? 'bg-white/[0.06] border-white/[0.1]'
-                    : 'bg-white/[0.02] border-white/[0.04] hover:bg-white/[0.04]'
+            <button
+                onClick={onToggle}
+                className={`w-full text-left group transition-all duration-400 ${isOpen
+                        ? 'bg-white/[0.06] border-white/[0.1]'
+                        : 'bg-white/[0.02] border-white/[0.04] hover:bg-white/[0.04]'
                     } border rounded-2xl overflow-hidden`}
             >
                 {/* Question row */}
                 <div className="flex items-center justify-between px-6 md:px-8 py-5 md:py-6">
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                         <span className={`text-[10px] font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen
-                            ? 'bg-accent text-white'
-                            : 'bg-white/[0.06] text-secondary'
+                                ? 'bg-accent text-white'
+                                : 'bg-white/[0.06] text-secondary'
                             }`}>
                             {String(index + 1).padStart(2, '0')}
                         </span>
@@ -73,8 +73,8 @@ const FAQItem = ({ faq, index, isOpen, onToggle }) => {
                         animate={{ rotate: isOpen ? 45 : 0 }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-4 transition-all duration-300 ${isOpen
-                            ? 'bg-accent text-white'
-                            : 'bg-white/[0.06] text-secondary group-hover:bg-white/[0.1]'
+                                ? 'bg-accent text-white'
+                                : 'bg-white/[0.06] text-secondary group-hover:bg-white/[0.1]'
                             }`}
                     >
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -103,7 +103,7 @@ const FAQItem = ({ faq, index, isOpen, onToggle }) => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div>
+            </button>
         </motion.div>
     );
 };
@@ -115,7 +115,7 @@ const FAQ = () => {
     const [openIndex, setOpenIndex] = useState(null);
 
     const handleToggle = (index) => {
-        setOpenIndex(index);
+        setOpenIndex(openIndex === index ? null : index);
     };
 
     return (
