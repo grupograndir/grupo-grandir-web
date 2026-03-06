@@ -1,195 +1,543 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FileSpreadsheet, Repeat, Users, TrendingDown, Layers, AlertCircle, Gauge, ShoppingCart, MessageSquare, Zap, Star, Layout } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const Card = ({ title, description, icon: Icon, span = "col-span-1", delay = 0, illustration }) => {
+/* ======================================================
+   Pain Points — Scroll-pinned single card with animations
+   ====================================================== */
+
+const painPoints = [
+    {
+        id: 1,
+        tag: 'Operaciones',
+        title: 'Procesos manuales que devoran horas',
+        description: 'Tu equipo pierde cientos de horas al mes en tareas que deberían estar automatizadas: copiar datos entre hojas de cálculo, generar informes a mano, enviar correos uno a uno. Es tiempo que nunca vuelve.',
+        stat: { value: '72%', label: 'del tiempo en tareas repetitivas' },
+        animation: 'manual-tasks',
+    },
+    {
+        id: 2,
+        tag: 'Tecnología',
+        title: 'Herramientas desconectadas entre sí',
+        description: 'CRM por un lado, facturación por otro, el ERP en su mundo. Cada herramienta en un silo. La información no fluye, se duplica, se pierde. Y tú pagas licencias de todo sin sacarle partido a nada.',
+        stat: { value: '€2.400', label: '/mes en apps infrautilizadas' },
+        animation: 'disconnected-tools',
+    },
+    {
+        id: 3,
+        tag: 'Control',
+        title: 'Cero visibilidad sobre tu negocio',
+        description: 'No tienes un panel donde ver qué pasa en tu empresa en tiempo real. Las decisiones se toman con datos de la semana pasada — o peor, por intuición. Mientras tú esperas, la competencia ya actuó.',
+        stat: { value: '5 días', label: 'de retraso medio en datos' },
+        animation: 'no-visibility',
+    },
+    {
+        id: 4,
+        tag: 'Crecimiento',
+        title: 'Escalar significa contratar más',
+        description: 'Cada vez que crece tu volumen, necesitas contratar. Más personas, más coordinación, más errores. Tu modelo de crecimiento es lineal cuando debería ser exponencial.',
+        stat: { value: '3x', label: 'más coste al duplicar volumen' },
+        animation: 'scaling-cost',
+    },
+    {
+        id: 5,
+        tag: 'Competitividad',
+        title: 'Tu competencia ya se ha digitalizado',
+        description: 'Mientras sigues con procesos del 2015, tus competidores automatizan, integran, y responden 10 veces más rápido. La brecha tecnológica crece cada día que pasa sin actuar.',
+        stat: { value: '-40%', label: 'de competitividad cada año' },
+        animation: 'competition',
+    },
+];
+
+/* ---- Animation: Manual repetitive tasks ---- */
+const ManualTasksAnimation = ({ isActive }) => {
+    const [tasksDone, setTasksDone] = useState(0);
+    useEffect(() => {
+        if (!isActive) { setTasksDone(0); return; }
+        let t = 0;
+        const interval = setInterval(() => {
+            t += 1;
+            if (t > 6) { t = 0; setTasksDone(0); return; }
+            setTasksDone(t);
+        }, 600);
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    const tasks = ['Copiar datos', 'Rellenar Excel', 'Enviar correo', 'Generar informe', 'Actualizar CRM', 'Revisar facturas'];
+
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ scale: 1.02 }}
-            className={`${span} glass-morphism rounded-[32px] p-8 md:p-10 relative overflow-hidden group border-white/5 bg-zinc-900/40 backdrop-blur-xl flex flex-col justify-between h-full`}
-        >
-            {/* Background Glow */}
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-accent/10 rounded-full blur-[80px] group-hover:bg-accent/20 transition-colors duration-500" />
-
-            <div className="relative z-10 h-full flex flex-col justify-between">
-                <div>
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-accent/10 transition-colors border border-white/10 group-hover:border-accent/20">
-                        <Icon className="text-white group-hover:text-accent transition-colors" size={24} />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4 tracking-tight text-white">{title}</h3>
-                    <p className="text-secondary leading-relaxed text-base font-medium">
-                        {description}
-                    </p>
-                </div>
-
-                {/* Custom Illustration Space */}
-                <div className="mt-8 flex justify-end">
-                    {illustration}
-                </div>
+        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col font-mono">
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/[0.04]">
+                <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                <span className="text-[9px] text-white/40">Tareas pendientes — HOY</span>
+                <span className="ml-auto text-[9px] text-red-400 font-mono">{tasks.length - Math.min(tasksDone, tasks.length)} pendientes</span>
             </div>
-        </motion.div>
+            <div className="flex-1 space-y-1.5">
+                {tasks.map((task, i) => {
+                    const done = i < tasksDone;
+                    return (
+                        <motion.div
+                            key={task}
+                            animate={{ opacity: done ? 0.4 : 1, x: done ? 0 : 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="flex items-center gap-2 text-[10px] md:text-xs"
+                        >
+                            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 transition-colors duration-300 ${done ? 'bg-white/5 border-white/10' : 'border-red-500/30 bg-red-500/5'
+                                }`}>
+                                {done && <span className="text-[8px] text-white/30">✓</span>}
+                            </div>
+                            <span className={`transition-all duration-300 ${done ? 'text-white/25 line-through' : 'text-white/70'}`}>
+                                {task}
+                            </span>
+                            {i === tasksDone && isActive && (
+                                <motion.span
+                                    animate={{ opacity: [0.3, 1, 0.3] }}
+                                    transition={{ repeat: Infinity, duration: 1 }}
+                                    className="ml-auto text-[8px] text-red-400"
+                                >procesando...</motion.span>
+                            )}
+                        </motion.div>
+                    );
+                })}
+            </div>
+            <div className="mt-2 pt-2 border-t border-white/[0.04] flex items-center justify-between">
+                <span className="text-[8px] text-white/20">Tiempo estimado: 4h 20min</span>
+                <motion.span
+                    animate={isActive ? { opacity: [0.5, 1, 0.5] } : { opacity: 0.5 }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="text-[8px] text-red-400"
+                >⚠ Cada día lo mismo</motion.span>
+            </div>
+        </div>
     );
 };
 
-const PainPoints = () => {
+/* ---- Animation: Disconnected tools ---- */
+const DisconnectedToolsAnimation = ({ isActive }) => {
+    const [brokenLink, setBrokenLink] = useState(0);
+    useEffect(() => {
+        if (!isActive) { setBrokenLink(0); return; }
+        let b = 0;
+        const interval = setInterval(() => {
+            b = (b + 1) % 5;
+            setBrokenLink(b);
+        }, 800);
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    const tools = [
+        { name: 'CRM', x: 12, y: 15 },
+        { name: 'ERP', x: 62, y: 15 },
+        { name: 'Email', x: 12, y: 60 },
+        { name: 'Excel', x: 62, y: 60 },
+    ];
+
     return (
-        <section className="bg-background py-32 px-6 relative overflow-hidden">
-            {/* Subtle background grid pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-4 relative flex flex-col">
+            <div className="flex items-center gap-2 mb-2 shrink-0">
+                <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                <span className="text-[9px] text-white/40">Estado de integraciones</span>
+            </div>
+            <div className="flex-1 min-h-0">
+                <svg className="w-full h-full" viewBox="0 0 100 90" preserveAspectRatio="xMidYMid meet">
+                    {/* Broken connections */}
+                    {[[0, 1], [0, 2], [1, 3], [2, 3], [0, 3], [1, 2]].map(([a, b], i) => (
+                        <line
+                            key={`${a}-${b}`}
+                            x1={tools[a].x + 13} y1={tools[a].y + 7}
+                            x2={tools[b].x + 13} y2={tools[b].y + 7}
+                            stroke={i === brokenLink ? '#ef4444' : '#ffffff'}
+                            strokeWidth="0.5"
+                            opacity={i === brokenLink ? 0.6 : 0.04}
+                            strokeDasharray={i === brokenLink ? '3 2' : '0'}
+                            style={{ transition: 'all 0.5s ease' }}
+                        />
+                    ))}
+                    {/* Tool boxes */}
+                    {tools.map((tool, i) => (
+                        <g key={tool.name}>
+                            <rect
+                                x={tool.x} y={tool.y}
+                                width="26" height="14" rx="3"
+                                fill="#ffffff" opacity="0.04"
+                                stroke={i === brokenLink || (i + 1) % 4 === brokenLink ? '#ef4444' : '#ffffff'}
+                                strokeWidth="0.4"
+                                style={{ transition: 'all 0.5s ease' }}
+                            />
+                            <text
+                                x={tool.x + 13} y={tool.y + 9}
+                                textAnchor="middle" fill="#ffffff"
+                                opacity="0.5" fontSize="4" fontWeight="600"
+                            >{tool.name}</text>
+                        </g>
+                    ))}
+                    {/* Error badge */}
+                    <g style={{ transition: 'all 0.3s ease' }}>
+                        <circle cx="50" cy="42" r="6" fill="#0D0D0D" stroke="#ef4444" strokeWidth="0.5" opacity="0.9" />
+                        <text x="50" y="44" textAnchor="middle" fill="#ef4444" fontSize="6" fontWeight="700">✕</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    );
+};
 
-            <div className="container mx-auto max-w-7xl relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-center mb-20"
-                >
-                    <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-6 font-display text-gradient">
-                        ¿POR QUÉ ESTÁS PERDIENDO <br className="hidden md:block" /> TIEMPO Y DINERO?
-                    </h2>
-                    <p className="text-secondary text-lg max-w-2xl mx-auto">
-                        La mayoría de las empresas pierden el 30% de sus ingresos por procesos ineficientes. ¿Cuál es tu caso?
-                    </p>
-                </motion.div>
+/* ---- Animation: No visibility / blind data ---- */
+const NoVisibilityAnimation = ({ isActive }) => {
+    const [flickerBar, setFlickerBar] = useState(-1);
+    useEffect(() => {
+        if (!isActive) { setFlickerBar(-1); return; }
+        let b = -1;
+        const interval = setInterval(() => {
+            b = (b + 1) % 7;
+            setFlickerBar(b);
+        }, 500);
+        return () => clearInterval(interval);
+    }, [isActive]);
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] md:auto-rows-[320px]">
+    const bars = [25, 60, 40, 70, 35, 55, 45];
 
-                    {/* Card 1: Caos Administrativo */}
-                    <Card
-                        title="Caos administrativo"
-                        description="Te organizas con excels, documentos, plantillas, y la gestión de tu empresa es un caos a nivel administrativo."
-                        icon={FileSpreadsheet}
-                        span="md:col-span-2 md:row-span-1"
-                        delay={0.1}
-                        illustration={
-                            <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-                                <div className="w-12 h-12 rounded-lg bg-red-500/20 border border-red-500/30 flex items-center justify-center animate-pulse">
-                                    <AlertCircle className="text-red-500" size={16} />
+    return (
+        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/[0.04]">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
+                    <span className="text-[9px] text-white/40">Dashboard — Datos obsoletos</span>
+                </div>
+                <span className="text-[8px] text-yellow-500/60 font-mono">Hace 5 días</span>
+            </div>
+            {/* Blurry chart */}
+            <div className="flex-1 flex items-end gap-1.5 px-2 relative">
+                {bars.map((h, i) => (
+                    <motion.div
+                        key={i}
+                        className="flex-1 rounded-t-sm"
+                        animate={{
+                            height: isActive ? `${h}%` : '0%',
+                            opacity: flickerBar === i ? 0.15 : 0.3,
+                            filter: 'blur(2px)',
+                        }}
+                        transition={{ duration: 0.4, delay: i * 0.08 }}
+                        style={{ background: 'linear-gradient(to top, #ef4444, #f97316)' }}
+                    />
+                ))}
+                {/* Blur overlay */}
+                <div className="absolute inset-0 bg-[#0D0D0D]/40 backdrop-blur-[1px] flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="text-base font-bold text-white/30">???</div>
+                        <div className="text-[8px] text-white/15 mt-1">Sin datos en tiempo real</div>
+                    </div>
+                </div>
+            </div>
+            {/* Fake metrics row */}
+            <div className="mt-3 pt-2 border-t border-white/[0.04] grid grid-cols-3 gap-2">
+                {['Ventas', 'Coste', 'Margen'].map((m) => (
+                    <div key={m} className="text-center">
+                        <div className="text-xs font-mono text-white/10 blur-[3px]">--,--€</div>
+                        <div className="text-[7px] text-white/15">{m}</div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+/* ---- Animation: Scaling cost ---- */
+const ScalingCostAnimation = ({ isActive }) => {
+    const [step, setStep] = useState(0);
+    useEffect(() => {
+        if (!isActive) { setStep(0); return; }
+        let s = 0;
+        const interval = setInterval(() => {
+            s = (s + 1) % 5;
+            setStep(s);
+        }, 900);
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    const stages = [
+        { people: 5, cost: '€8K', volume: '100%' },
+        { people: 8, cost: '€14K', volume: '150%' },
+        { people: 12, cost: '€22K', volume: '200%' },
+        { people: 18, cost: '€38K', volume: '250%' },
+        { people: 25, cost: '€60K', volume: '300%' },
+    ];
+
+    const current = stages[step];
+
+    return (
+        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col">
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/[0.04]">
+                <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                <span className="text-[9px] text-white/40">Simulador de crecimiento lineal</span>
+            </div>
+            {/* Main metrics */}
+            <div className="grid grid-cols-3 gap-2 mb-4">
+                <div className="bg-white/[0.02] rounded-lg p-2 text-center border border-white/[0.03]">
+                    <motion.div
+                        key={current.people}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        className="text-lg font-bold text-white/90 font-mono"
+                    >{current.people}</motion.div>
+                    <div className="text-[7px] text-white/25">Empleados</div>
+                </div>
+                <div className="bg-white/[0.02] rounded-lg p-2 text-center border border-red-500/10">
+                    <motion.div
+                        key={current.cost}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        className="text-lg font-bold text-red-400 font-mono"
+                    >{current.cost}</motion.div>
+                    <div className="text-[7px] text-white/25">Coste/mes</div>
+                </div>
+                <div className="bg-white/[0.02] rounded-lg p-2 text-center border border-white/[0.03]">
+                    <motion.div
+                        key={current.volume}
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        className="text-lg font-bold text-white/90 font-mono"
+                    >{current.volume}</motion.div>
+                    <div className="text-[7px] text-white/25">Volumen</div>
+                </div>
+            </div>
+            {/* People icons row */}
+            <div className="flex-1 flex items-center justify-center flex-wrap gap-1">
+                {Array.from({ length: current.people }).map((_, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: i * 0.02 }}
+                        className="w-4 h-4 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center"
+                    >
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                    </motion.div>
+                ))}
+            </div>
+            <div className="mt-2 pt-2 border-t border-white/[0.04] text-center">
+                <span className="text-[8px] text-red-400/60">Crecimiento lineal = costes exponenciales</span>
+            </div>
+        </div>
+    );
+};
+
+/* ---- Animation: Competition gap ---- */
+const CompetitionAnimation = ({ isActive }) => {
+    const [gap, setGap] = useState(0);
+    useEffect(() => {
+        if (!isActive) { setGap(0); return; }
+        let g = 0;
+        const interval = setInterval(() => {
+            g += 1;
+            if (g > 10) { g = 0; setGap(0); return; }
+            setGap(g);
+        }, 400);
+        return () => clearInterval(interval);
+    }, [isActive]);
+
+    return (
+        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col">
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/[0.04]">
+                <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                <span className="text-[9px] text-white/40">Brecha tecnológica</span>
+            </div>
+            <div className="flex-1 flex flex-col justify-center gap-4 px-2">
+                {/* Competitor bar */}
+                <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[9px] text-green-400/80 font-semibold">Tu competencia</span>
+                        <span className="text-[9px] text-green-400/60 font-mono">{Math.min(50 + gap * 5, 95)}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-white/[0.04] rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full bg-green-500/50 rounded-full"
+                            animate={{ width: `${Math.min(50 + gap * 5, 95)}%` }}
+                            transition={{ duration: 0.3 }}
+                        />
+                    </div>
+                </div>
+                {/* Your bar */}
+                <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[9px] text-red-400/80 font-semibold">Tu empresa</span>
+                        <span className="text-[9px] text-red-400/60 font-mono">{Math.max(50 - gap * 3, 15)}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-white/[0.04] rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full bg-red-500/50 rounded-full"
+                            animate={{ width: `${Math.max(50 - gap * 3, 15)}%` }}
+                            transition={{ duration: 0.3 }}
+                        />
+                    </div>
+                </div>
+                {/* Gap indicator */}
+                <div className="text-center mt-2">
+                    <motion.div
+                        animate={{ opacity: gap > 5 ? [0.5, 1, 0.5] : 0.5 }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                        className="text-xs font-bold text-red-400"
+                    >
+                        Brecha: {Math.min(gap * 8, 80)}%
+                    </motion.div>
+                    <div className="text-[8px] text-white/20 mt-1">Crece cada día sin acción</div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ---- Animation resolver ---- */
+const AnimationForType = ({ type, isActive }) => {
+    switch (type) {
+        case 'manual-tasks': return <ManualTasksAnimation isActive={isActive} />;
+        case 'disconnected-tools': return <DisconnectedToolsAnimation isActive={isActive} />;
+        case 'no-visibility': return <NoVisibilityAnimation isActive={isActive} />;
+        case 'scaling-cost': return <ScalingCostAnimation isActive={isActive} />;
+        case 'competition': return <CompetitionAnimation isActive={isActive} />;
+        default: return null;
+    }
+};
+
+/* ======================================================
+   Main Section — Scroll-pinned single card
+   ====================================================== */
+const PainPoints = () => {
+    const sectionRef = useRef(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isStuck, setIsStuck] = useState(false);
+
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const handleScroll = () => {
+            const rect = section.getBoundingClientRect();
+            const sectionTop = rect.top;
+            const sectionHeight = rect.height;
+            const viewportH = window.innerHeight;
+
+            // Are we inside the pinned range?
+            const pinStart = 0;
+            const pinEnd = sectionHeight - viewportH;
+            const scrolledIntoSection = -sectionTop;
+
+            if (sectionTop <= 0 && scrolledIntoSection < pinEnd) {
+                setIsStuck(true);
+                const progress = scrolledIntoSection / pinEnd;
+                const idx = Math.min(
+                    Math.floor(progress * painPoints.length),
+                    painPoints.length - 1
+                );
+                setActiveIndex(idx);
+            } else {
+                setIsStuck(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const activePoint = painPoints[activeIndex];
+
+    return (
+        <section
+            ref={sectionRef}
+            className="relative bg-background"
+            style={{ height: `${(painPoints.length + 1) * 100}vh` }}
+        >
+            {/* Sticky container */}
+            <div className={`${isStuck ? 'fixed top-0' : 'absolute top-0'} left-0 w-full h-screen flex items-center justify-center z-10`}>
+                {/* Subtle background grid pattern */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                    style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+                <div className="container mx-auto px-6 max-w-6xl relative z-10">
+                    {/* Section Header */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="text-center mb-12"
+                    >
+                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter mb-4 font-display text-gradient">
+                            ¿POR QUÉ ESTÁS PERDIENDO <br className="hidden md:block" /> TIEMPO Y DINERO?
+                        </h2>
+                        <p className="text-secondary text-base md:text-lg max-w-2xl mx-auto">
+                            La mayoría de las empresas pierden el 30% de sus ingresos por procesos ineficientes. ¿Cuál es tu caso?
+                        </p>
+                    </motion.div>
+
+                    {/* Step indicators */}
+                    <div className="flex items-center justify-center gap-2 mb-8">
+                        {painPoints.map((_, i) => (
+                            <div
+                                key={i}
+                                className={`h-1 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-8 bg-accent' : 'w-2 bg-white/10'
+                                    }`}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Main card */}
+                    <div className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10 max-w-4xl mx-auto">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activePoint.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                {/* Tag + Counter */}
+                                <div className="flex items-center justify-between mb-6">
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
+                                        {activePoint.tag}
+                                    </span>
+                                    <span className="text-[10px] text-white/30 font-mono">
+                                        {activeIndex + 1} / {painPoints.length}
+                                    </span>
                                 </div>
-                                <div className="w-12 h-12 rounded-lg bg-zinc-800 border border-white/10" />
-                                <div className="w-12 h-12 rounded-lg bg-zinc-800 border border-white/10" />
-                            </div>
-                        }
-                    />
 
-                    {/* Card 2: Aplicaciones Innecesarias (NEW - IUROP Clone) */}
-                    <Card
-                        title="Aplicaciones innecesarias"
-                        description="Apps de terceros cobrándote cada mes. Ralentizan tu web, no se integran entre sí, y puedes prescindir del 90%."
-                        icon={Layout}
-                        span="md:col-span-1 md:row-span-1"
-                        delay={0.15}
-                        illustration={
-                            <div className="relative w-32 h-24 flex items-center justify-center">
-                                {/* Gauge Background */}
-                                <svg viewBox="0 0 100 50" className="w-full">
-                                    <path d="M 10 50 A 40 40 0 0 1 90 50" stroke="#1f2937" strokeWidth="8" fill="none" strokeLinecap="round" />
-                                    <path d="M 10 50 A 40 40 0 0 1 50 10" stroke="url(#gauge-gradient)" strokeWidth="8" fill="none" strokeLinecap="round" />
-                                    <defs>
-                                        <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#ef4444" />
-                                            <stop offset="100%" stopColor="#eab308" />
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                                {/* Apps around */}
-                                <div className="absolute inset-0">
-                                    <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full glass-morphism border-white/10 flex items-center justify-center shadow-lg"><ShoppingCart size={10} /></motion.div>
-                                    <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 2.5, repeat: Infinity }} className="absolute top-1/2 -right-2 -translate-y-1/2 w-6 h-6 rounded-full glass-morphism border-white/10 flex items-center justify-center shadow-lg"><MessageSquare size={10} /></motion.div>
-                                    <motion.div animate={{ x: [0, -4, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute top-1/2 -left-2 -translate-y-1/2 w-6 h-6 rounded-full glass-morphism border-white/10 flex items-center justify-center shadow-lg"><Zap size={10} /></motion.div>
-                                </div>
-                                {/* Needle */}
-                                <motion.div
-                                    animate={{ rotate: [-45, 10, -45] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute bottom-0 left-1/2 w-1 h-12 bg-white origin-bottom -translate-x-1/2 rounded-full"
-                                />
-                            </div>
-                        }
-                    />
-
-                    {/* Card 3: Tareas Repetitivas */}
-                    <Card
-                        title="Tareas repetitivas"
-                        description="Tus empleados se pasan el día repitiendo lo mismo, sin generar valor añadido."
-                        icon={Repeat}
-                        span="md:col-span-1 md:row-span-1"
-                        delay={0.2}
-                        illustration={
-                            <div className="relative w-16 h-16 border-2 border-white/10 rounded-full flex items-center justify-center group-hover:border-accent/30 transition-colors">
-                                <motion.div
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                                    className="absolute inset-0 border-2 border-t-accent/40 border-transparent rounded-full"
-                                />
-                                <Repeat className="text-zinc-600 group-hover:text-accent" size={20} />
-                            </div>
-                        }
-                    />
-
-                    {/* Card 4: Control de gastos */}
-                    <Card
-                        title="Control de gastos"
-                        description="Llevar las cuentas no significa que estés haciendo lo correcto a nivel financiero."
-                        icon={TrendingDown}
-                        span="md:col-span-1 md:row-span-1"
-                        delay={0.4}
-                        illustration={
-                            <div className="relative p-6 glass-morphism rounded-2xl border-red-500/20 group-hover:border-red-500/40 transition-colors">
-                                <div className="flex items-baseline gap-1 text-red-500 font-bold">
-                                    <TrendingDown size={14} />
-                                    <span className="text-xl">-24%</span>
-                                </div>
-                                <div className="text-[10px] uppercase tracking-tighter text-zinc-600 mt-1">Leakage</div>
-                            </div>
-                        }
-                    />
-
-                    {/* Card 5: Empleados improductivos */}
-                    <Card
-                        title="Empleados improductivos"
-                        description="Tus empleados no aprovechan su tiempo y no se adaptan a las tecnologías de hoy."
-                        icon={Users}
-                        span="md:col-span-1 md:row-span-1"
-                        delay={0.3}
-                        illustration={
-                            <div className="w-full flex gap-1 items-end h-12 px-4">
-                                {[40, 70, 30, 85].map((h, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ height: 0 }}
-                                        whileInView={{ height: `${h}%` }}
-                                        className={`w-full rounded-sm ${i === 3 ? 'bg-accent' : 'bg-zinc-800'}`}
-                                    />
-                                ))}
-                            </div>
-                        }
-                    />
-
-                    {/* Card 6: Alta carga de trabajo */}
-                    <Card
-                        title="Alta carga de trabajo"
-                        description="No debes contratar más, debes ayudarles a hacer más con menos. Para eso estamos nosotros."
-                        icon={Layers}
-                        span="md:col-span-1 md:row-span-1"
-                        delay={0.5}
-                        illustration={
-                            <div className="flex -space-x-4">
-                                {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-12 h-12 rounded-xl glass-morphism border-white/10 flex items-center justify-center translate-y-2 group-hover:translate-y-0 transition-transform">
-                                        <div className="w-6 h-1 bg-zinc-700 rounded-full" />
+                                {/* Content grid */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                                    {/* Left: Text */}
+                                    <div>
+                                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+                                            {activePoint.title}
+                                        </h3>
+                                        <p className="text-secondary text-sm md:text-base leading-relaxed mb-6">
+                                            {activePoint.description}
+                                        </p>
+                                        {/* Stat */}
+                                        <div className="flex items-baseline gap-2 px-4 py-3 bg-red-500/5 border border-red-500/10 rounded-xl inline-flex">
+                                            <span className="text-2xl font-extrabold text-red-400 font-mono">
+                                                {activePoint.stat.value}
+                                            </span>
+                                            <span className="text-xs text-red-400/60">
+                                                {activePoint.stat.label}
+                                            </span>
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
-                        }
-                    />
 
+                                    {/* Right: Animation */}
+                                    <div className="h-56 md:h-64">
+                                        <AnimationForType type={activePoint.animation} isActive={true} />
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Scroll hint */}
+                    <motion.div
+                        animate={{ y: [0, 6, 0] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                        className="text-center mt-6"
+                    >
+                        <span className="text-[10px] text-white/20">Desliza para ver más</span>
+                    </motion.div>
                 </div>
             </div>
         </section>
