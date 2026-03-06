@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 
 /* ---- Animated Code Editor for Step 3 ---- */
 const codeLines = [
@@ -14,10 +14,11 @@ const codeLines = [
     { num: 9, tokens: [{ text: 'await', color: '#FF6B4F' }, { text: ' pipeline', color: '#fff' }, { text: '.deploy', color: '#DCDCAA' }, { text: '()', color: '#fff' }] },
 ];
 
-const CodeEditorAnimation = () => {
+const CodeEditorAnimation = ({ isActive }) => {
     const [visibleLines, setVisibleLines] = useState(0);
 
     useEffect(() => {
+        if (!isActive) { setVisibleLines(0); return; }
         let line = 0;
         const interval = setInterval(() => {
             line += 1;
@@ -29,7 +30,7 @@ const CodeEditorAnimation = () => {
             setVisibleLines(line);
         }, 600);
         return () => clearInterval(interval);
-    }, []);
+    }, [isActive]);
 
     return (
         <div className="w-full h-full rounded-xl overflow-hidden bg-[#0D0D0D] border border-white/[0.06] font-mono text-[10px] md:text-xs flex">
@@ -90,10 +91,11 @@ const auditItems = [
     { label: 'Oportunidades' },
 ];
 
-const AuditAnimation = () => {
+const AuditAnimation = ({ isActive }) => {
     const [checkedCount, setCheckedCount] = useState(0);
 
     useEffect(() => {
+        if (!isActive) { setCheckedCount(0); return; }
         let count = 0;
         const interval = setInterval(() => {
             count += 1;
@@ -105,7 +107,7 @@ const AuditAnimation = () => {
             setCheckedCount(count);
         }, 800);
         return () => clearInterval(interval);
-    }, []);
+    }, [isActive]);
 
     return (
         <div className="w-full h-full rounded-xl overflow-hidden bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col">
@@ -180,10 +182,11 @@ const strategyNodes = [
     { id: 'bi', label: 'BI', x: 70, y: 75 },
 ];
 
-const StrategyAnimation = () => {
+const StrategyAnimation = ({ isActive }) => {
     const [activeConnections, setActiveConnections] = useState(0);
 
     useEffect(() => {
+        if (!isActive) { setActiveConnections(0); return; }
         let conn = 0;
         const interval = setInterval(() => {
             conn += 1;
@@ -195,7 +198,7 @@ const StrategyAnimation = () => {
             setActiveConnections(conn);
         }, 700);
         return () => clearInterval(interval);
-    }, []);
+    }, [isActive]);
 
     const connections = [
         { from: 'crm', to: 'hub' },
@@ -284,11 +287,12 @@ const StrategyAnimation = () => {
 };
 
 /* ---- Animated Launch Dashboard for Step 4 ---- */
-const LaunchAnimation = () => {
+const LaunchAnimation = ({ isActive }) => {
     const [phase, setPhase] = useState(0);
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
+        if (!isActive) { setProgress(0); setPhase(0); return; }
         let p = 0;
         const interval = setInterval(() => {
             p += 5;
@@ -303,7 +307,7 @@ const LaunchAnimation = () => {
             }
         }, 200);
         return () => clearInterval(interval);
-    }, []);
+    }, [isActive]);
 
     const metrics = [
         { label: 'Procesos', value: Math.round(progress * 0.47), suffix: '' },
@@ -357,7 +361,7 @@ const LaunchAnimation = () => {
                 {['Build', 'Test', 'Deploy'].map((step, i) => (
                     <div key={step} className="flex items-center gap-1.5">
                         <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${(i === 0 && progress > 0) || (i === 1 && phase >= 1) || (i === 2 && phase >= 2)
-                                ? 'bg-green-500' : 'bg-white/10'
+                            ? 'bg-green-500' : 'bg-white/10'
                             }`} />
                         <span className="text-[8px] text-white/30">{step}</span>
                     </div>
@@ -406,72 +410,78 @@ const steps = [
     },
 ];
 
-const StepCard = ({ step }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10"
-    >
-        {/* Timeline badge */}
-        <div className="flex items-center gap-3 mb-6">
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
-                {step.timeline}
-            </span>
-            <div className="h-[1px] flex-1 bg-white/[0.06]" />
-        </div>
+const StepCard = ({ step }) => {
+    const cardRef = useRef(null);
+    const isInView = useInView(cardRef, { once: false, amount: 0.4 });
 
-        {/* Title */}
-        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
-            {step.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-secondary text-sm md:text-base leading-relaxed mb-8">
-            {step.description}
-        </p>
-
-        {/* Illustration */}
-        {typeof step.icon === 'string' ? (
-            <div className="mb-8 h-56">
-                {step.icon === 'audit' && <AuditAnimation />}
-                {step.icon === 'strategy' && <StrategyAnimation />}
-                {step.icon === 'code-editor' && <CodeEditorAnimation />}
-                {step.icon === 'launch' && <LaunchAnimation />}
+    return (
+        <motion.div
+            ref={cardRef}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10"
+        >
+            {/* Timeline badge */}
+            <div className="flex items-center gap-3 mb-6">
+                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
+                    {step.timeline}
+                </span>
+                <div className="h-[1px] flex-1 bg-white/[0.06]" />
             </div>
-        ) : (
-            <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
-                <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.15 }}
-                    className="w-40 h-40"
-                >
-                    {step.icon}
-                </motion.div>
-            </div>
-        )}
 
-        {/* Features grid */}
-        <div className="grid grid-cols-2 gap-3">
-            {step.features.map((feature, i) => (
-                <motion.div
-                    key={feature}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: 0.08 * i }}
-                    className="flex items-center gap-2"
-                >
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-                    <span className="text-xs text-secondary">{feature}</span>
-                </motion.div>
-            ))}
-        </div>
-    </motion.div>
-);
+            {/* Title */}
+            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+                {step.title}
+            </h3>
+
+            {/* Description */}
+            <p className="text-secondary text-sm md:text-base leading-relaxed mb-8">
+                {step.description}
+            </p>
+
+            {/* Illustration */}
+            {typeof step.icon === 'string' ? (
+                <div className="mb-8 h-56">
+                    {step.icon === 'audit' && <AuditAnimation isActive={isInView} />}
+                    {step.icon === 'strategy' && <StrategyAnimation isActive={isInView} />}
+                    {step.icon === 'code-editor' && <CodeEditorAnimation isActive={isInView} />}
+                    {step.icon === 'launch' && <LaunchAnimation isActive={isInView} />}
+                </div>
+            ) : (
+                <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
+                    <motion.div
+                        initial={{ scale: 0.85, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                        className="w-40 h-40"
+                    >
+                        {step.icon}
+                    </motion.div>
+                </div>
+            )}
+
+            {/* Features grid */}
+            <div className="grid grid-cols-2 gap-3">
+                {step.features.map((feature, i) => (
+                    <motion.div
+                        key={feature}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: 0.08 * i }}
+                        className="flex items-center gap-2"
+                    >
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                        <span className="text-xs text-secondary">{feature}</span>
+                    </motion.div>
+                ))}
+            </div>
+        </motion.div>
+    );
+};
 
 const Methodology = () => {
     const [activeStep, setActiveStep] = useState(0);
