@@ -255,11 +255,11 @@ const ScalingCostAnimation = ({ isActive }) => {
     }, [isActive]);
 
     const stages = [
-        { people: 5, cost: '€8K', volume: '100%' },
-        { people: 8, cost: '€14K', volume: '150%' },
-        { people: 12, cost: '€22K', volume: '200%' },
-        { people: 18, cost: '€38K', volume: '250%' },
-        { people: 25, cost: '€60K', volume: '300%' },
+        { people: 5, cost: '€10K', volume: '100%' },
+        { people: 8, cost: '€16K', volume: '150%' },
+        { people: 12, cost: '€24K', volume: '200%' },
+        { people: 18, cost: '€36K', volume: '250%' },
+        { people: 25, cost: '€50K', volume: '300%' },
     ];
 
     const current = stages[step];
