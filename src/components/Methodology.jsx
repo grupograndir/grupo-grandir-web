@@ -81,6 +81,292 @@ const CodeEditorAnimation = () => {
     );
 };
 
+/* ---- Animated Audit Checklist for Step 1 ---- */
+const auditItems = [
+    { label: 'Flujos de trabajo' },
+    { label: 'Herramientas actuales' },
+    { label: 'Cuellos de botella' },
+    { label: 'Costes operativos' },
+    { label: 'Oportunidades' },
+];
+
+const AuditAnimation = () => {
+    const [checkedCount, setCheckedCount] = useState(0);
+
+    useEffect(() => {
+        let count = 0;
+        const interval = setInterval(() => {
+            count += 1;
+            if (count > auditItems.length) {
+                count = 0;
+                setCheckedCount(0);
+                return;
+            }
+            setCheckedCount(count);
+        }, 800);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="w-full h-full rounded-xl overflow-hidden bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.04]">
+                <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded bg-accent/20 flex items-center justify-center">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="#FF2800" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                    </div>
+                    <span className="text-[10px] md:text-xs font-semibold text-white/60">Auditoría operativa</span>
+                </div>
+                <span className="text-[9px] text-accent font-mono">{Math.min(checkedCount, auditItems.length)}/{auditItems.length}</span>
+            </div>
+            {/* Items */}
+            <div className="flex-1 space-y-2">
+                {auditItems.map((item, i) => {
+                    const isChecked = i < checkedCount;
+                    const isCurrent = i === checkedCount - 1;
+                    return (
+                        <motion.div
+                            key={item.label}
+                            animate={{ opacity: isChecked ? 1 : 0.3, x: isChecked ? 0 : 4 }}
+                            transition={{ duration: 0.3 }}
+                            className="flex items-center gap-2.5"
+                        >
+                            <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors duration-300 ${isChecked ? 'bg-accent/20 border-accent/40' : 'border-white/10'
+                                }`}>
+                                {isChecked && (
+                                    <motion.svg
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                    >
+                                        <path d="M2 5.5L4 7.5L8 3" stroke="#FF2800" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </motion.svg>
+                                )}
+                            </div>
+                            <span className={`text-[10px] md:text-xs transition-colors duration-300 ${isChecked ? 'text-white/80' : 'text-white/25'}`}>
+                                {item.label}
+                            </span>
+                            {isCurrent && (
+                                <motion.div
+                                    animate={{ opacity: [0.3, 1, 0.3] }}
+                                    transition={{ repeat: Infinity, duration: 1.2 }}
+                                    className="ml-auto text-[8px] text-accent font-mono"
+                                >analizando...</motion.div>
+                            )}
+                        </motion.div>
+                    );
+                })}
+            </div>
+            {/* Progress bar */}
+            <div className="mt-3 pt-3 border-t border-white/[0.04]">
+                <div className="w-full h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                    <motion.div
+                        className="h-full bg-accent/60 rounded-full"
+                        animate={{ width: `${(Math.min(checkedCount, auditItems.length) / auditItems.length) * 100}%` }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ---- Animated Strategy Flowchart for Step 2 ---- */
+const strategyNodes = [
+    { id: 'crm', label: 'CRM', x: 15, y: 20 },
+    { id: 'hub', label: 'Grandir Hub', x: 35, y: 45, isCenter: true },
+    { id: 'erp', label: 'ERP', x: 70, y: 20 },
+    { id: 'auto', label: 'Flujos', x: 15, y: 75 },
+    { id: 'bi', label: 'BI', x: 70, y: 75 },
+];
+
+const StrategyAnimation = () => {
+    const [activeConnections, setActiveConnections] = useState(0);
+
+    useEffect(() => {
+        let conn = 0;
+        const interval = setInterval(() => {
+            conn += 1;
+            if (conn > 4) {
+                conn = 0;
+                setActiveConnections(0);
+                return;
+            }
+            setActiveConnections(conn);
+        }, 700);
+        return () => clearInterval(interval);
+    }, []);
+
+    const connections = [
+        { from: 'crm', to: 'hub' },
+        { from: 'erp', to: 'hub' },
+        { from: 'auto', to: 'hub' },
+        { from: 'bi', to: 'hub' },
+    ];
+
+    return (
+        <div className="w-full h-full rounded-xl overflow-hidden bg-[#0D0D0D] border border-white/[0.06] p-4 relative flex flex-col">
+            {/* Title */}
+            <div className="flex items-center gap-2 mb-2 shrink-0">
+                <div className="w-2 h-2 rounded-full bg-accent/60" />
+                <span className="text-[9px] text-white/40">Arquitectura del ecosistema</span>
+            </div>
+            {/* Flowchart */}
+            <div className="flex-1 min-h-0">
+                <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                    {/* Connection lines */}
+                    {connections.map((conn, i) => {
+                        const from = strategyNodes.find(n => n.id === conn.from);
+                        const to = strategyNodes.find(n => n.id === conn.to);
+                        const isActive = i < activeConnections;
+                        return (
+                            <g key={`${conn.from}-${conn.to}`}>
+                                <line
+                                    x1={from.x + 8} y1={from.y + 5}
+                                    x2={to.x + 10} y2={to.y + 5}
+                                    stroke={isActive ? '#FF2800' : '#ffffff'}
+                                    strokeWidth="0.5"
+                                    opacity={isActive ? 0.5 : 0.06}
+                                    style={{ transition: 'all 0.5s ease' }}
+                                />
+                                {isActive && (
+                                    <circle r="1.5" fill="#FF2800" opacity="0.8">
+                                        <animateMotion
+                                            dur="1.5s"
+                                            repeatCount="indefinite"
+                                            path={`M${from.x + 8},${from.y + 5} L${to.x + 10},${to.y + 5}`}
+                                        />
+                                    </circle>
+                                )}
+                            </g>
+                        );
+                    })}
+                    {/* Nodes */}
+                    {strategyNodes.map((node) => {
+                        const isConnected = node.isCenter || connections.findIndex(c => c.from === node.id) < activeConnections;
+                        const w = node.isCenter ? 22 : 16;
+                        return (
+                            <g key={node.id}>
+                                <rect
+                                    x={node.x} y={node.y}
+                                    width={w} height="10" rx="2"
+                                    fill={node.isCenter ? '#FF2800' : isConnected ? '#FF2800' : '#ffffff'}
+                                    opacity={node.isCenter ? 0.25 : isConnected ? 0.15 : 0.05}
+                                    style={{ transition: 'all 0.5s ease' }}
+                                />
+                                <rect
+                                    x={node.x} y={node.y}
+                                    width={w} height="10" rx="2"
+                                    fill="none"
+                                    stroke={node.isCenter ? '#FF2800' : isConnected ? '#FF2800' : '#ffffff'}
+                                    strokeWidth="0.4"
+                                    opacity={node.isCenter ? 0.6 : isConnected ? 0.4 : 0.1}
+                                    style={{ transition: 'all 0.5s ease' }}
+                                />
+                                <text
+                                    x={node.x + w / 2} y={node.y + 6.5}
+                                    textAnchor="middle"
+                                    fill="#ffffff"
+                                    opacity={isConnected || node.isCenter ? 0.8 : 0.2}
+                                    fontSize={node.isCenter ? '2.8' : '3'}
+                                    fontWeight="600"
+                                    style={{ transition: 'opacity 0.5s ease' }}
+                                >
+                                    {node.label}
+                                </text>
+                            </g>
+                        );
+                    })}
+                </svg>
+            </div>
+        </div>
+    );
+};
+
+/* ---- Animated Launch Dashboard for Step 4 ---- */
+const LaunchAnimation = () => {
+    const [phase, setPhase] = useState(0);
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        let p = 0;
+        const interval = setInterval(() => {
+            p += 5;
+            if (p <= 100) {
+                setProgress(p);
+                if (p >= 40) setPhase(1);
+                if (p >= 80) setPhase(2);
+            } else {
+                p = 0;
+                setProgress(0);
+                setPhase(0);
+            }
+        }, 200);
+        return () => clearInterval(interval);
+    }, []);
+
+    const metrics = [
+        { label: 'Procesos', value: Math.round(progress * 0.47), suffix: '' },
+        { label: 'Eficiencia', value: Math.round(progress * 0.92), suffix: '%' },
+        { label: 'Ahorro', value: Math.round(progress * 0.35), suffix: 'h' },
+    ];
+
+    return (
+        <div className="w-full h-full rounded-xl overflow-hidden bg-[#0D0D0D] border border-white/[0.06] p-4 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.04]">
+                <div className="flex items-center gap-2">
+                    <motion.div
+                        animate={{ scale: phase === 2 ? [1, 1.3, 1] : 1 }}
+                        transition={{ repeat: phase === 2 ? Infinity : 0, duration: 1.5 }}
+                        className={`w-2 h-2 rounded-full ${phase === 2 ? 'bg-green-500' : phase === 1 ? 'bg-yellow-500' : 'bg-accent'}`}
+                    />
+                    <span className="text-[10px] md:text-xs font-semibold text-white/60">
+                        {phase === 0 ? 'Desplegando...' : phase === 1 ? 'Verificando...' : '¡En producción!'}
+                    </span>
+                </div>
+                <span className="text-[9px] text-white/30 font-mono">v1.0.0</span>
+            </div>
+            {/* Deploy progress */}
+            <div className="mb-4">
+                <div className="flex justify-between mb-1.5">
+                    <span className="text-[9px] text-white/30">Deploy</span>
+                    <span className="text-[9px] text-accent font-mono">{progress}%</span>
+                </div>
+                <div className="w-full h-2 bg-white/[0.04] rounded-full overflow-hidden">
+                    <motion.div
+                        className={`h-full rounded-full ${phase === 2 ? 'bg-green-500/70' : 'bg-accent/60'}`}
+                        style={{ width: `${progress}%` }}
+                        transition={{ duration: 0.15 }}
+                    />
+                </div>
+            </div>
+            {/* Metrics */}
+            <div className="grid grid-cols-3 gap-2 flex-1">
+                {metrics.map((m) => (
+                    <div key={m.label} className="bg-white/[0.02] rounded-lg p-2 flex flex-col items-center justify-center border border-white/[0.03]">
+                        <span className="text-base md:text-lg font-bold text-white/90 font-mono">
+                            {m.value}{m.suffix}
+                        </span>
+                        <span className="text-[8px] text-white/30 mt-0.5">{m.label}</span>
+                    </div>
+                ))}
+            </div>
+            {/* Status bar */}
+            <div className="mt-3 pt-3 border-t border-white/[0.04] flex items-center gap-3">
+                {['Build', 'Test', 'Deploy'].map((step, i) => (
+                    <div key={step} className="flex items-center gap-1.5">
+                        <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${(i === 0 && progress > 0) || (i === 1 && phase >= 1) || (i === 2 && phase >= 2)
+                                ? 'bg-green-500' : 'bg-white/10'
+                            }`} />
+                        <span className="text-[8px] text-white/30">{step}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 const steps = [
     {
         id: 1,
@@ -89,20 +375,7 @@ const steps = [
         title: 'Análisis y Onboarding',
         description: 'Analizamos a fondo tu operativa actual, flujos de trabajo, herramientas existentes y puntos de fricción. Mapeamos cada proceso para identificar exactamente dónde se pierde tiempo y dinero.',
         features: ['Auditoría operativa completa', 'Mapa de flujos de trabajo', 'Identificación de cuellos de botella', 'Informe de oportunidades'],
-        icon: (
-            <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
-                <rect x="30" y="30" width="140" height="140" rx="16" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <rect x="50" y="60" width="100" height="8" rx="4" fill="currentColor" opacity="0.15" />
-                <rect x="50" y="80" width="80" height="8" rx="4" fill="currentColor" opacity="0.15" />
-                <rect x="50" y="100" width="90" height="8" rx="4" fill="currentColor" opacity="0.15" />
-                <rect x="50" y="120" width="60" height="8" rx="4" fill="currentColor" opacity="0.15" />
-                <circle cx="42" cy="64" r="4" fill="#FF2800" opacity="0.8" />
-                <circle cx="42" cy="84" r="4" fill="#FF2800" opacity="0.6" />
-                <circle cx="42" cy="104" r="4" fill="#FF2800" opacity="0.4" />
-                <circle cx="42" cy="124" r="4" fill="currentColor" opacity="0.2" />
-                <path d="M38 62 L42 66 L48 58" stroke="#FF2800" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" />
-            </svg>
-        ),
+        icon: 'audit',
     },
     {
         id: 2,
@@ -111,22 +384,7 @@ const steps = [
         title: 'Auditoría y Estrategia',
         description: 'Diseñamos la arquitectura de la solución ideal. Definimos qué automatizar, qué integrar y cómo orquestar todos los sistemas para que trabajen como un ecosistema cohesionado.',
         features: ['Diseño de arquitectura', 'Plan de automatizaciones', 'Estrategia de integración', 'Roadmap técnico'],
-        icon: (
-            <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
-                <circle cx="100" cy="100" r="60" stroke="currentColor" strokeWidth="1.5" opacity="0.1" />
-                <circle cx="100" cy="100" r="40" stroke="currentColor" strokeWidth="1.5" opacity="0.15" />
-                <circle cx="100" cy="100" r="20" stroke="#FF2800" strokeWidth="1.5" opacity="0.4" />
-                <line x1="100" y1="40" x2="100" y2="60" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <line x1="160" y1="100" x2="140" y2="100" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <line x1="100" y1="160" x2="100" y2="140" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <line x1="40" y1="100" x2="60" y2="100" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <circle cx="100" cy="40" r="5" fill="#FF2800" opacity="0.6" />
-                <circle cx="160" cy="100" r="5" fill="#FF2800" opacity="0.4" />
-                <circle cx="100" cy="160" r="5" fill="currentColor" opacity="0.3" />
-                <circle cx="40" cy="100" r="5" fill="currentColor" opacity="0.3" />
-                <path d="M85 95 L95 105 L115 85" stroke="#FF2800" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
-            </svg>
-        ),
+        icon: 'strategy',
     },
     {
         id: 3,
@@ -144,21 +402,7 @@ const steps = [
         title: 'Implementación del Ecosistema',
         description: 'Lanzamos tu solución y te acompañamos en cada paso. Formación a tu equipo, soporte continuo y optimización constante para asegurar que alcances tus objetivos de eficiencia desde el primer día.',
         features: ['Lanzamiento guiado', 'Formación a usuarios', 'Soporte prioritario', 'Optimización continua'],
-        icon: (
-            <svg className="w-full h-full" viewBox="0 0 200 200" fill="none">
-                <rect x="35" y="45" width="130" height="90" rx="8" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-                <rect x="35" y="45" width="130" height="20" rx="8" fill="currentColor" opacity="0.05" />
-                <circle cx="48" cy="55" r="3" fill="#FF2800" opacity="0.7" />
-                <circle cx="58" cy="55" r="3" fill="currentColor" opacity="0.3" />
-                <circle cx="68" cy="55" r="3" fill="currentColor" opacity="0.2" />
-                <rect x="50" y="80" width="45" height="40" rx="6" fill="#FF2800" opacity="0.1" />
-                <rect x="50" y="80" width="45" height="40" rx="6" stroke="#FF2800" strokeWidth="1" fill="none" opacity="0.3" />
-                <rect x="105" y="80" width="45" height="18" rx="4" fill="currentColor" opacity="0.06" />
-                <rect x="105" y="102" width="45" height="18" rx="4" fill="currentColor" opacity="0.06" />
-                <rect x="55" y="148" width="90" height="10" rx="5" fill="currentColor" opacity="0.1" />
-                <rect x="55" y="148" width="55" height="10" rx="5" fill="#FF2800" opacity="0.2" />
-            </svg>
-        ),
+        icon: 'launch',
     },
 ];
 
@@ -189,9 +433,12 @@ const StepCard = ({ step }) => (
         </p>
 
         {/* Illustration */}
-        {step.icon === 'code-editor' ? (
+        {typeof step.icon === 'string' ? (
             <div className="mb-8 h-56">
-                <CodeEditorAnimation />
+                {step.icon === 'audit' && <AuditAnimation />}
+                {step.icon === 'strategy' && <StrategyAnimation />}
+                {step.icon === 'code-editor' && <CodeEditorAnimation />}
+                {step.icon === 'launch' && <LaunchAnimation />}
             </div>
         ) : (
             <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-8 mb-8 flex items-center justify-center text-white/60 h-48">
