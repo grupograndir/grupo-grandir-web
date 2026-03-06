@@ -432,7 +432,7 @@ const PainPoints = () => {
     }, [total]);
 
     const activePoint = painPoints[activeIndex];
-    const isLastSlide = activeIndex === total - 1;
+
 
     return (
         <section
@@ -526,38 +526,20 @@ const PainPoints = () => {
                                     </div>
                                 </div>
 
-                                {/* CTA on last slide */}
-                                {isLastSlide && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="mt-8 pt-6 border-t border-white/[0.04] text-center"
-                                    >
-                                        <p className="text-secondary text-sm mb-4">¿Te sientes identificado? Podemos solucionarlo.</p>
-                                        <a
-                                            href="#contacto"
-                                            className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105"
-                                        >
-                                            Trabajemos juntos
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                                        </a>
-                                    </motion.div>
-                                )}
+
+
                             </motion.div>
                         </AnimatePresence>
                     </div>
 
                     {/* Scroll hint */}
-                    {!isLastSlide && (
-                        <motion.div
-                            animate={{ y: [0, 6, 0] }}
-                            transition={{ repeat: Infinity, duration: 2 }}
-                            className="text-center mt-6"
-                        >
-                            <span className="text-[10px] text-white/20">Desliza para ver más</span>
-                        </motion.div>
-                    )}
+                    <motion.div
+                        animate={{ y: [0, 6, 0] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                        className="text-center mt-6"
+                    >
+                        <span className="text-[10px] text-white/20">Desliza para ver más</span>
+                    </motion.div>
                 </div>
             </div>
         </section>
