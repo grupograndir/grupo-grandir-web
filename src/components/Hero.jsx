@@ -82,22 +82,21 @@ const Hero = () => {
                         <span className="text-white">MÁS&nbsp;</span>
                         <span
                             className="inline-block text-left overflow-hidden"
-                            style={{ width: maxWidth }}
+                            style={{ width: maxWidth, paddingRight: '0.05em' }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.span
                                     key={rotatingWords[wordIndex]}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.35, ease: 'easeInOut' }}
+                                    initial={{ y: '100%', opacity: 0 }}
+                                    animate={{ y: '0%', opacity: 1 }}
+                                    exit={{ y: '-100%', opacity: 0 }}
+                                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                                     className="inline-block rotating-word-gradient"
                                 >
                                     {rotatingWords[wordIndex]}
                                 </motion.span>
                             </AnimatePresence>
                         </span>
-                        <span className="rotating-word-gradient">.</span>
                     </span>
                 </motion.h1>
 
