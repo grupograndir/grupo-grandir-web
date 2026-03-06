@@ -406,6 +406,7 @@ const PainPoints = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isStuck, setIsStuck] = useState(false);
     const cooldownRef = useRef(false);
+    const indexRef = useRef(0);
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -435,27 +436,28 @@ const PainPoints = () => {
             // Only intercept when section is in the pinned zone
             if (rect.top > 0 || scrolledIntoSection >= pinEnd) return;
 
+            // Block ALL events during cooldown
             if (cooldownRef.current) {
                 e.preventDefault();
                 return;
             }
 
             const direction = e.deltaY > 0 ? 1 : -1;
+            const currentIdx = indexRef.current;
 
             // At first item scrolling up → let page scroll naturally
-            if (direction < 0 && activeIndex === 0) return;
+            if (direction < 0 && currentIdx === 0) return;
             // At last item scrolling down → let page scroll naturally
-            if (direction > 0 && activeIndex === painPoints.length - 1) return;
+            if (direction > 0 && currentIdx === painPoints.length - 1) return;
 
             e.preventDefault();
             cooldownRef.current = true;
 
-            setActiveIndex((prev) => {
-                const next = prev + direction;
-                return Math.max(0, Math.min(painPoints.length - 1, next));
-            });
+            const nextIdx = Math.max(0, Math.min(painPoints.length - 1, currentIdx + direction));
+            indexRef.current = nextIdx;
+            setActiveIndex(nextIdx);
 
-            setTimeout(() => { cooldownRef.current = false; }, 700);
+            setTimeout(() => { cooldownRef.current = false; }, 800);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -465,7 +467,7 @@ const PainPoints = () => {
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('wheel', handleWheel);
         };
-    }, [activeIndex]);
+    }, []);
 
     const activePoint = painPoints[activeIndex];
     const isLastSlide = activeIndex === painPoints.length - 1;
