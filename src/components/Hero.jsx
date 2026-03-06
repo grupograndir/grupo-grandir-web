@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const rotatingWords = ['VELOCIDAD', 'EFICIENCIA', 'CONTROL', 'RENTABILIDAD', 'CRECIMIENTO'];
 
 const Hero = () => {
     const [wordIndex, setWordIndex] = useState(0);
+    const [maxWidth, setMaxWidth] = useState('auto');
+    const measureRef = useRef(null);
+
+    // Measure the widest word once on mount to fix the container width
+    useEffect(() => {
+        if (measureRef.current) {
+            const spans = measureRef.current.querySelectorAll('span');
+            let max = 0;
+            spans.forEach((span) => {
+                if (span.offsetWidth > max) max = span.offsetWidth;
+            });
+            setMaxWidth(`${max}px`);
+        }
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -19,7 +33,19 @@ const Hero = () => {
             <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] -z-10" />
             <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] -z-10" />
 
-            {/* Navigation Pill — pinned to top, outside of normal flow */}
+            {/* Hidden measurement container */}
+            <div
+                ref={measureRef}
+                aria-hidden="true"
+                className="absolute opacity-0 pointer-events-none text-5xl md:text-8xl font-extrabold tracking-tighter font-display whitespace-nowrap"
+                style={{ visibility: 'hidden' }}
+            >
+                {rotatingWords.map((word) => (
+                    <span key={word} className="block">{word}</span>
+                ))}
+            </div>
+
+            {/* Navigation Pill — pinned to top */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -52,25 +78,26 @@ const Hero = () => {
                 >
                     <span className="text-gradient">MENOS COSTES.</span>
                     <br />
-                    <span className="inline-flex items-baseline mt-2" style={{ marginTop: '0.15em' }}>
+                    <span className="inline-flex items-baseline justify-center" style={{ marginTop: '0.15em' }}>
                         <span className="text-white">MÁS&nbsp;</span>
-                        <span className="relative inline-block" style={{ minWidth: '5ch' }}>
-                            {/* Red glow behind rotating word */}
-                            <span className="absolute inset-0 blur-[40px] bg-accent/30 rounded-full pointer-events-none" />
+                        <span
+                            className="inline-block text-left overflow-hidden"
+                            style={{ width: maxWidth }}
+                        >
                             <AnimatePresence mode="wait">
                                 <motion.span
                                     key={rotatingWords[wordIndex]}
-                                    initial={{ y: 30, opacity: 0, filter: 'blur(8px)' }}
-                                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                                    exit={{ y: -30, opacity: 0, filter: 'blur(8px)' }}
-                                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.35, ease: 'easeInOut' }}
                                     className="inline-block rotating-word-gradient"
                                 >
                                     {rotatingWords[wordIndex]}
                                 </motion.span>
                             </AnimatePresence>
-                            <span className="rotating-word-gradient">.</span>
                         </span>
+                        <span className="rotating-word-gradient">.</span>
                     </span>
                 </motion.h1>
 
