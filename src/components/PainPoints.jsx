@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /* ======================================================
    Pain Points — Methodology-style natural scroll
@@ -402,116 +402,162 @@ const painPoints = [
 ];
 
 /* ======================================================
-   PainPoint Card — individual scrollable card
-   ====================================================== */
-const PainPointCard = ({ point }) => {
-    const cardRef = useRef(null);
-    const isInView = useInView(cardRef, { once: false, amount: 0.4 });
-
-    return (
-        <motion.div
-            ref={cardRef}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10"
-        >
-            {/* Tag */}
-            <div className="flex items-center gap-3 mb-6">
-                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
-                    {point.tag}
-                </span>
-                <div className="h-[1px] flex-1 bg-white/[0.06]" />
-            </div>
-
-            {/* Title */}
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
-                {point.title}
-            </h3>
-
-            {/* Description */}
-            <p className="text-secondary text-sm md:text-base leading-relaxed mb-8">
-                {point.description}
-            </p>
-
-            {/* Animation */}
-            <div className="mb-8 h-56">
-                <AnimationForType type={point.animation} isActive={isInView} />
-            </div>
-
-            {/* Stat */}
-            <div className="flex items-baseline gap-2 px-4 py-3 bg-red-500/5 border border-red-500/10 rounded-xl inline-flex">
-                <span className="text-2xl font-extrabold text-red-400 font-mono">
-                    {point.stat.value}
-                </span>
-                <span className="text-xs text-red-400/60">
-                    {point.stat.label}
-                </span>
-            </div>
-        </motion.div>
-    );
-};
-
-/* ======================================================
-   Main Section — Full-width cards, natural scroll
+   Main Section — Scroll-pinned single card swap
    ====================================================== */
 const PainPoints = () => {
+    const sectionRef = useRef(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const total = painPoints.length;
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const section = sectionRef.current;
+            if (!section) return;
+
+            const rect = section.getBoundingClientRect();
+            const sectionHeight = section.offsetHeight;
+            const viewportH = window.innerHeight;
+            const scrollableRange = sectionHeight - viewportH;
+
+            if (scrollableRange <= 0) return;
+
+            // How far we've scrolled into the section (0 = top visible, 1 = fully scrolled)
+            const progress = Math.max(0, Math.min(1, -rect.top / scrollableRange));
+            const idx = Math.min(total - 1, Math.floor(progress * total));
+            setActiveIndex(idx);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [total]);
+
+    const activePoint = painPoints[activeIndex];
+    const isLastSlide = activeIndex === total - 1;
+
     return (
-        <section className="relative py-32 bg-background overflow-hidden">
-            {/* Subtle background grid pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <section
+            ref={sectionRef}
+            className="relative bg-background"
+            style={{ height: `${(total + 1) * 100}vh` }}
+        >
+            <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center z-10">
+                {/* Subtle background grid pattern */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                    style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-            <div className="container mx-auto px-6 max-w-4xl relative z-10">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-center mb-20"
-                >
-                    <span className="text-xs font-semibold tracking-[0.3em] uppercase text-secondary mb-6 block">
-                        ¿Te suena familiar?
-                    </span>
-                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95] font-display mb-6">
-                        ¿Por qué estás<br />
-                        <span className="text-accent">perdiendo dinero?</span>
-                    </h2>
-                    <p className="text-secondary text-base md:text-lg max-w-lg mx-auto leading-relaxed">
-                        La mayoría de las empresas pierden el 30% de sus ingresos por procesos ineficientes. ¿Cuál es tu caso?
-                    </p>
-                </motion.div>
-
-                {/* Cards — full width, natural scroll */}
-                <div className="space-y-8">
-                    {painPoints.map((point) => (
-                        <PainPointCard key={point.id} point={point} />
-                    ))}
-
-                    {/* CTA after all cards */}
+                <div className="container mx-auto px-6 max-w-4xl relative z-10">
+                    {/* Section Header */}
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
+                        viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10 text-center"
+                        className="text-center mb-10"
                     >
-                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
-                            ¿Te sientes identificado?
-                        </h3>
-                        <p className="text-secondary text-sm md:text-base leading-relaxed mb-6 max-w-md mx-auto">
-                            Todos estos problemas tienen una solución común: digitalizar, automatizar e integrar tu operativa con tecnología a medida.
+                        <span className="text-xs font-semibold tracking-[0.3em] uppercase text-secondary mb-4 block">
+                            ¿Te suena familiar?
+                        </span>
+                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-[0.95] font-display mb-4">
+                            ¿Por qué estás<br />
+                            <span className="text-accent">perdiendo dinero?</span>
+                        </h2>
+                        <p className="text-secondary text-sm md:text-base max-w-lg mx-auto leading-relaxed">
+                            La mayoría de las empresas pierden el 30% de sus ingresos por procesos ineficientes.
                         </p>
-                        <a
-                            href="#contacto"
-                            className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105"
-                        >
-                            Trabajemos juntos
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        </a>
                     </motion.div>
+
+                    {/* Step dots */}
+                    <div className="flex items-center justify-center gap-2 mb-8">
+                        {painPoints.map((_, i) => (
+                            <div
+                                key={i}
+                                className={`h-1 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-8 bg-accent' : 'w-2 bg-white/10'
+                                    }`}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Single card — swaps on scroll */}
+                    <div className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10 max-w-4xl mx-auto">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activePoint.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                {/* Tag + Counter */}
+                                <div className="flex items-center justify-between mb-6">
+                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">
+                                        {activePoint.tag}
+                                    </span>
+                                    <span className="text-[10px] text-white/30 font-mono">
+                                        {activeIndex + 1} / {total}
+                                    </span>
+                                </div>
+
+                                {/* Content grid */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start" style={{ minHeight: '280px' }}>
+                                    {/* Left: Text */}
+                                    <div className="flex flex-col justify-between h-full" style={{ minHeight: '260px' }}>
+                                        <div>
+                                            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+                                                {activePoint.title}
+                                            </h3>
+                                            <p className="text-secondary text-sm md:text-base leading-relaxed mb-6">
+                                                {activePoint.description}
+                                            </p>
+                                        </div>
+                                        {/* Stat */}
+                                        <div className="flex items-baseline gap-2 px-4 py-3 bg-red-500/5 border border-red-500/10 rounded-xl inline-flex">
+                                            <span className="text-2xl font-extrabold text-red-400 font-mono">
+                                                {activePoint.stat.value}
+                                            </span>
+                                            <span className="text-xs text-red-400/60">
+                                                {activePoint.stat.label}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Right: Animation */}
+                                    <div className="h-64">
+                                        <AnimationForType type={activePoint.animation} isActive={true} />
+                                    </div>
+                                </div>
+
+                                {/* CTA on last slide */}
+                                {isLastSlide && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.3, duration: 0.5 }}
+                                        className="mt-8 pt-6 border-t border-white/[0.04] text-center"
+                                    >
+                                        <p className="text-secondary text-sm mb-4">¿Te sientes identificado? Podemos solucionarlo.</p>
+                                        <a
+                                            href="#contacto"
+                                            className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105"
+                                        >
+                                            Trabajemos juntos
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                                        </a>
+                                    </motion.div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Scroll hint */}
+                    {!isLastSlide && (
+                        <motion.div
+                            animate={{ y: [0, 6, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="text-center mt-6"
+                        >
+                            <span className="text-[10px] text-white/20">Desliza para ver más</span>
+                        </motion.div>
+                    )}
                 </div>
             </div>
         </section>
@@ -519,3 +565,4 @@ const PainPoints = () => {
 };
 
 export default PainPoints;
+
