@@ -16,7 +16,7 @@ const Hero = () => {
             spans.forEach((span) => {
                 if (span.offsetWidth > max) max = span.offsetWidth;
             });
-            setMaxWidth(`${max}px`);
+            setMaxWidth(`${Math.ceil(max * 1.1)}px`);
         }
     }, []);
 
@@ -81,8 +81,8 @@ const Hero = () => {
                     <span className="inline-flex items-baseline justify-center" style={{ marginTop: '0.15em' }}>
                         <span className="text-white">MÁS&nbsp;</span>
                         <span
-                            className="inline-block text-left overflow-hidden"
-                            style={{ width: maxWidth, paddingRight: '0.05em' }}
+                            className="inline-block text-left"
+                            style={{ width: maxWidth, clipPath: 'inset(-5% 0)' }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.span
