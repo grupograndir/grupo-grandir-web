@@ -38,7 +38,7 @@ body {
 }
 
 .rotating-word-gradient {
-  background: linear-gradient(135deg, #FF4D2A 0%, #FF2800 40%, #FF6B4F 70%, #FFFFFF 100%);
+  background: linear-gradient(90deg, #FF2800 0%, #FF4D2A 50%, #FF6B4F 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
