@@ -82,7 +82,7 @@ const Hero = () => {
                         <span className="text-white">MÁS&nbsp;</span>
                         <span
                             className="inline-block text-left"
-                            style={{ width: maxWidth, clipPath: 'inset(-5% 0)' }}
+                            style={{ width: maxWidth, clipPath: 'inset(-10% -100% -10% -100%)' }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.span
