@@ -5,6 +5,7 @@ import PainPoints from './components/PainPoints'
 import GrandirAnalytics from './components/GrandirAnalytics'
 import ServicesHero from './components/ServicesHero'
 import Methodology from './components/Methodology'
+import FAQ from './components/FAQ'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <ServicesHero />
       <GrandirAnalytics />
       <Methodology />
+      <FAQ />
     </main>
   )
 }
