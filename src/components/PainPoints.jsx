@@ -5,48 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
    Pain Points — Scroll-pinned single card with animations
    ====================================================== */
 
-const painPoints = [
-    {
-        id: 1,
-        tag: 'Crecimiento',
-        title: 'Escalar significa contratar más',
-        description: 'Cada vez que crece tu volumen, necesitas contratar. Más personas, más coordinación, más errores. Tu modelo de crecimiento es lineal cuando debería ser exponencial.',
-        stat: { value: '3x', label: 'más coste al duplicar volumen' },
-        animation: 'scaling-cost',
-    },
-    {
-        id: 2,
-        tag: 'Operaciones',
-        title: 'Procesos manuales que devoran horas',
-        description: 'Tu equipo pierde cientos de horas al mes en tareas que deberían estar automatizadas: copiar datos entre hojas de cálculo, generar informes a mano, enviar correos uno a uno. Es tiempo que nunca vuelve.',
-        stat: { value: '72%', label: 'del tiempo en tareas repetitivas' },
-        animation: 'manual-tasks',
-    },
-    {
-        id: 3,
-        tag: 'Competitividad',
-        title: 'Tu competencia ya se ha digitalizado',
-        description: 'Mientras sigues con procesos del 2015, tus competidores automatizan, integran, y responden 10 veces más rápido. La brecha tecnológica crece cada día que pasa sin actuar.',
-        stat: { value: '-40%', label: 'de competitividad cada año' },
-        animation: 'competition',
-    },
-    {
-        id: 4,
-        tag: 'Control',
-        title: 'Cero visibilidad sobre tu negocio',
-        description: 'No tienes un panel donde ver qué pasa en tu empresa en tiempo real. Las decisiones se toman con datos de la semana pasada — o peor, por intuición. Mientras tú esperas, la competencia ya actuó.',
-        stat: { value: '5 días', label: 'de retraso medio en datos' },
-        animation: 'no-visibility',
-    },
-    {
-        id: 5,
-        tag: 'Tecnología',
-        title: 'Herramientas desconectadas entre sí',
-        description: 'CRM por un lado, facturación por otro, el ERP en su mundo. Cada herramienta en un silo. La información no fluye, se duplica, se pierde. Y tú pagas licencias de todo sin sacarle partido a nada.',
-        stat: { value: '€2.400', label: '/mes en apps infrautilizadas' },
-        animation: 'disconnected-tools',
-    },
-];
 
 /* ---- Animation: Manual repetitive tasks ---- */
 const ManualTasksAnimation = ({ isActive }) => {
@@ -398,66 +356,124 @@ const AnimationForType = ({ type, isActive }) => {
     }
 };
 
+const painPoints = [
+    {
+        id: 1,
+        tag: 'Crecimiento',
+        title: 'Escalar significa contratar más',
+        description: 'Cada vez que crece tu volumen de trabajo, necesitas contratar más gente. Más personas implica más coordinación, más errores humanos y más costes fijos. Tu modelo de crecimiento es lineal cuando debería ser exponencial. Automatizar procesos te permite crecer sin multiplicar tu plantilla.',
+        stat: { value: '3x', label: 'más coste al duplicar volumen' },
+        animation: 'scaling-cost',
+    },
+    {
+        id: 2,
+        tag: 'Operaciones',
+        title: 'Procesos manuales que devoran horas',
+        description: 'Tu equipo pierde cientos de horas al mes en tareas que deberían estar automatizadas: copiar datos entre hojas de cálculo, generar informes a mano, enviar correos uno a uno. Es tiempo que nunca vuelve y que podrías estar dedicando a tareas que realmente generan valor para tu negocio.',
+        stat: { value: '72%', label: 'del tiempo en tareas repetitivas' },
+        animation: 'manual-tasks',
+    },
+    {
+        id: 3,
+        tag: 'Competitividad',
+        title: 'Tu competencia ya se ha digitalizado',
+        description: 'Mientras sigues operando con procesos del 2015, tus competidores automatizan, integran sistemas y responden diez veces más rápido que tú. La brecha tecnológica crece cada día que pasa sin actuar. Cada semana que tardas en digitalizar tu operativa, pierdes terreno frente a quienes ya lo hicieron.',
+        stat: { value: '-40%', label: 'de competitividad cada año' },
+        animation: 'competition',
+    },
+    {
+        id: 4,
+        tag: 'Control',
+        title: 'Cero visibilidad sobre tu negocio',
+        description: 'No tienes un panel donde ver qué está pasando en tu empresa en tiempo real. Las decisiones se toman con datos de la semana pasada — o peor, por pura intuición. Mientras tú esperas a que alguien te prepare un informe, tu competencia ya tomó la decisión correcta basándose en datos actualizados.',
+        stat: { value: '5 días', label: 'de retraso medio en datos' },
+        animation: 'no-visibility',
+    },
+    {
+        id: 5,
+        tag: 'Tecnología',
+        title: 'Herramientas desconectadas entre sí',
+        description: 'CRM por un lado, facturación por otro, el ERP en su propio mundo. Cada herramienta funciona en un silo. La información no fluye entre sistemas, se duplica y se pierde. Y tú sigues pagando licencias mensuales de todas estas aplicaciones sin ser capaz de sacarle el máximo partido a ninguna de ellas.',
+        stat: { value: '€2.400', label: '/mes en apps infrautilizadas' },
+        animation: 'disconnected-tools',
+    },
+];
+
 /* ======================================================
-   Main Section — Scroll-pinned single card
+   Main Section — Full screen-lock scroll
    ====================================================== */
 const PainPoints = () => {
     const sectionRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [isStuck, setIsStuck] = useState(false);
-    const cooldownRef = useRef(false);
+    const [isLocked, setIsLocked] = useState(false);
     const indexRef = useRef(0);
+    const lockedRef = useRef(false);
+    const cooldownRef = useRef(false);
 
     useEffect(() => {
         const section = sectionRef.current;
         if (!section) return;
 
+        const lock = () => {
+            if (!lockedRef.current) {
+                lockedRef.current = true;
+                setIsLocked(true);
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        const unlock = () => {
+            if (lockedRef.current) {
+                lockedRef.current = false;
+                setIsLocked(false);
+                document.body.style.overflow = '';
+            }
+        };
+
         const handleScroll = () => {
             const rect = section.getBoundingClientRect();
-            const sectionHeight = rect.height;
             const viewportH = window.innerHeight;
-            const scrolledIntoSection = -rect.top;
-            const pinEnd = sectionHeight - viewportH;
 
-            if (rect.top <= 0 && scrolledIntoSection < pinEnd) {
-                setIsStuck(true);
-            } else {
-                setIsStuck(false);
+            // Lock when the section's top reaches the top of viewport
+            if (rect.top <= 0 && rect.bottom > viewportH) {
+                lock();
             }
         };
 
         const handleWheel = (e) => {
-            const rect = section.getBoundingClientRect();
-            const sectionHeight = rect.height;
-            const viewportH = window.innerHeight;
-            const scrolledIntoSection = -rect.top;
-            const pinEnd = sectionHeight - viewportH;
+            if (!lockedRef.current) return;
 
-            // Only intercept when section is in the pinned zone
-            if (rect.top > 0 || scrolledIntoSection >= pinEnd) return;
+            e.preventDefault();
 
-            // Block ALL events during cooldown
-            if (cooldownRef.current) {
-                e.preventDefault();
-                return;
-            }
+            if (cooldownRef.current) return;
 
             const direction = e.deltaY > 0 ? 1 : -1;
             const currentIdx = indexRef.current;
 
-            // At first item scrolling up → let page scroll naturally
-            if (direction < 0 && currentIdx === 0) return;
-            // At last item scrolling down → let page scroll naturally
-            if (direction > 0 && currentIdx === painPoints.length - 1) return;
+            // At first item scrolling up → unlock and let page scroll
+            if (direction < 0 && currentIdx === 0) {
+                unlock();
+                return;
+            }
 
-            e.preventDefault();
+            // At last item scrolling down → unlock and scroll past section
+            if (direction > 0 && currentIdx === painPoints.length - 1) {
+                unlock();
+                const section = sectionRef.current;
+                if (section) {
+                    const sectionBottom = section.getBoundingClientRect().bottom + window.scrollY;
+                    window.scrollTo({ top: sectionBottom, behavior: 'smooth' });
+                }
+                return;
+            }
+
+            // Step forward/backward
             cooldownRef.current = true;
-
             const nextIdx = Math.max(0, Math.min(painPoints.length - 1, currentIdx + direction));
             indexRef.current = nextIdx;
             setActiveIndex(nextIdx);
 
-            setTimeout(() => { cooldownRef.current = false; }, 800);
+            setTimeout(() => { cooldownRef.current = false; }, 600);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -466,6 +482,7 @@ const PainPoints = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('wheel', handleWheel);
+            document.body.style.overflow = '';
         };
     }, []);
 
@@ -476,10 +493,9 @@ const PainPoints = () => {
         <section
             ref={sectionRef}
             className="relative bg-background"
-            style={{ height: `${(painPoints.length + 1) * 100}vh` }}
+            style={{ height: '200vh' }}
         >
-            {/* Sticky container */}
-            <div className={`${isStuck ? 'fixed top-0' : 'absolute top-0'} left-0 w-full h-screen flex items-center justify-center z-10`}>
+            <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center z-10">
                 {/* Subtle background grid pattern */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
                     style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -512,7 +528,7 @@ const PainPoints = () => {
                         ))}
                     </div>
 
-                    {/* Main card */}
+                    {/* Main card — fixed height */}
                     <div className="bg-[#0A0A0A] border border-white/[0.06] rounded-3xl p-8 lg:p-10 max-w-4xl mx-auto">
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -532,16 +548,18 @@ const PainPoints = () => {
                                     </span>
                                 </div>
 
-                                {/* Content grid */}
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                                {/* Content grid — fixed height */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start" style={{ minHeight: '280px' }}>
                                     {/* Left: Text */}
-                                    <div>
-                                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
-                                            {activePoint.title}
-                                        </h3>
-                                        <p className="text-secondary text-sm md:text-base leading-relaxed mb-6">
-                                            {activePoint.description}
-                                        </p>
+                                    <div className="flex flex-col justify-between h-full" style={{ minHeight: '260px' }}>
+                                        <div>
+                                            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4 font-display">
+                                                {activePoint.title}
+                                            </h3>
+                                            <p className="text-secondary text-sm md:text-base leading-relaxed mb-6">
+                                                {activePoint.description}
+                                            </p>
+                                        </div>
                                         {/* Stat */}
                                         <div className="flex items-baseline gap-2 px-4 py-3 bg-red-500/5 border border-red-500/10 rounded-xl inline-flex">
                                             <span className="text-2xl font-extrabold text-red-400 font-mono">
@@ -553,8 +571,8 @@ const PainPoints = () => {
                                         </div>
                                     </div>
 
-                                    {/* Right: Animation */}
-                                    <div className="h-56 md:h-64">
+                                    {/* Right: Animation — fixed height */}
+                                    <div className="h-64">
                                         <AnimationForType type={activePoint.animation} isActive={true} />
                                     </div>
                                 </div>
