@@ -6,6 +6,7 @@ import GrandirAnalytics from './components/GrandirAnalytics'
 import ServicesHero from './components/ServicesHero'
 import Methodology from './components/Methodology'
 import FAQ from './components/FAQ'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <GrandirAnalytics />
       <Methodology />
       <FAQ />
+      <Footer />
     </main>
   )
 }
