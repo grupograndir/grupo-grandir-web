@@ -6,10 +6,10 @@ const Footer = () => {
         <footer className="relative bg-background border-t border-white/[0.04]">
             <div className="container mx-auto px-6 max-w-6xl">
                 {/* Main footer content */}
-                <div className="py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-16 items-start">
+                <div className="py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-16 items-stretch">
                     {/* Left — Brand name large */}
                     <div className="flex items-center">
-                        <h2 className="text-[80px] md:text-[120px] lg:text-[160px] font-bold tracking-tighter leading-[0.85] uppercase font-display text-white/[0.12] select-none">
+                        <h2 className="text-[80px] md:text-[140px] lg:text-[220px] font-bold tracking-tighter leading-[0.85] uppercase font-display text-white/[0.12] select-none">
                             GRANDIR
                         </h2>
                     </div>
