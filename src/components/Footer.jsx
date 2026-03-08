@@ -8,13 +8,10 @@ const Footer = () => {
                 {/* Main footer content */}
                 <div className="py-16 md:py-24 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-16 items-start">
                     {/* Left — Brand name large */}
-                    <div>
-                        <h2 className="text-6xl md:text-8xl lg:text-[120px] font-extrabold tracking-tighter leading-[0.85] font-display text-white/[0.07] select-none">
-                            GRUPO<br />GRANDIR
+                    <div className="flex items-center">
+                        <h2 className="text-[80px] md:text-[120px] lg:text-[160px] font-bold tracking-tighter leading-[0.85] uppercase font-display text-white/[0.12] select-none">
+                            GRANDIR
                         </h2>
-                        <p className="text-secondary text-sm mt-6 max-w-sm leading-relaxed">
-                            Transformamos la operativa de tu empresa con tecnología a medida, automatización inteligente y soluciones digitales que generan resultados reales.
-                        </p>
                     </div>
 
                     {/* Right — Link columns */}
