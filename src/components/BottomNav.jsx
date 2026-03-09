@@ -79,26 +79,26 @@ const BottomNav = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Track which section is in view
+    // Track which section is in view based on scroll position
     useEffect(() => {
         const sectionIds = ['hero', 'problemas', 'soluciones', 'metodologia', 'faqs'];
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setActiveSection(entry.target.id);
-                    }
-                });
-            },
-            { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' }
-        );
 
-        sectionIds.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
+        const handleSectionTrack = () => {
+            const viewportMiddle = window.scrollY + window.innerHeight * 0.4;
+            let current = 'hero';
 
-        return () => observer.disconnect();
+            for (const id of sectionIds) {
+                const el = document.getElementById(id);
+                if (el && el.offsetTop <= viewportMiddle) {
+                    current = id;
+                }
+            }
+            setActiveSection(current);
+        };
+
+        window.addEventListener('scroll', handleSectionTrack, { passive: true });
+        handleSectionTrack();
+        return () => window.removeEventListener('scroll', handleSectionTrack);
     }, []);
 
     const scrollTo = (href) => {
@@ -117,7 +117,7 @@ const BottomNav = () => {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 100, opacity: 0 }}
                     transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-black/70 backdrop-blur-xl border border-white/[0.08] rounded-full px-2 py-2 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                    className="fixed bottom-6 inset-x-0 mx-auto w-fit z-50 flex items-center gap-1 bg-black/70 backdrop-blur-xl border border-white/[0.08] rounded-full px-2 py-2 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
                 >
                     {navItems.map((item) => {
                         const isActive = activeSection === item.href.replace('#', '');
@@ -126,8 +126,8 @@ const BottomNav = () => {
                                 key={item.label}
                                 onClick={() => scrollTo(item.href)}
                                 className={`relative flex flex-col items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 cursor-pointer ${isActive
-                                        ? 'bg-white/[0.1] text-white'
-                                        : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]'
+                                    ? 'bg-white/[0.1] text-white'
+                                    : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]'
                                     }`}
                             >
                                 <span className={`transition-colors duration-300 ${isActive ? 'text-accent' : ''}`}>
