@@ -436,6 +436,7 @@ const PainPoints = () => {
 
     return (
         <section
+            id="problemas"
             ref={sectionRef}
             className="relative bg-background"
             style={{ height: `${(total + 1) * 100}vh` }}

@@ -8,6 +8,7 @@ import Methodology from './components/Methodology'
 import FAQ from './components/FAQ'
 import FinalCTA from './components/FinalCTA'
 import Footer from './components/Footer'
+import BottomNav from './components/BottomNav'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <FAQ />
       <FinalCTA />
       <Footer />
+      <BottomNav />
     </main>
   )
 }

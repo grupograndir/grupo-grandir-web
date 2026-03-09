@@ -9,7 +9,7 @@ const features = [
 
 const ServicesHero = () => {
     return (
-        <section className="relative py-32 md:py-40 overflow-hidden">
+        <section id="soluciones" className="relative py-32 md:py-40 overflow-hidden">
             {/* Background Glows */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[180px] pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-600/3 rounded-full blur-[120px] pointer-events-none" />

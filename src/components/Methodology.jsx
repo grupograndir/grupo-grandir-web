@@ -512,7 +512,7 @@ const Methodology = () => {
     };
 
     return (
-        <section className="relative py-32">
+        <section id="metodologia" className="relative py-32">
             {/* Background — clipped independently so it doesn't break sticky */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[200px]" />
