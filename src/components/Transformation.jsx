@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, Euro, CheckCircle2, CircleDollarSign } from 'lucide-react';
+import Logo3D from './Logo3D';
 
 const icons = {
     input: [
@@ -75,22 +76,9 @@ const Transformation = () => {
                     className="relative z-20 w-32 h-32 md:w-44 md:h-44 rounded-full glass-morphism border-white/20 flex items-center justify-center bg-black/40 backdrop-blur-2xl overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-accent/5 animate-pulse" />
-                    <motion.div
-                        className="relative z-10 w-[65%] h-[65%]"
-                        style={{ perspective: 200 }}
-                        animate={{
-                            rotateY: [0, 15, 0, -15, 0],
-                            rotateX: [0, -8, 0, 8, 0],
-                        }}
-                        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                    >
-                        <img
-                            src="/logo.png"
-                            alt="Grupo Grandir"
-                            className="w-full h-full object-contain pointer-events-none drop-shadow-[0_0_20px_rgba(255,40,0,0.4)]"
-                            style={{ filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.5))' }}
-                        />
-                    </motion.div>
+                    <div className="relative z-10 w-full h-full">
+                        <Logo3D />
+                    </div>
                 </motion.div>
 
                 {/* Tracks Visualization (Optional paths) */}
