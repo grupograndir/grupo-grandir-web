@@ -74,10 +74,13 @@ const ServicesHero = () => {
                     transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
                     className="flex justify-center mb-16"
                 >
-                    <motion.button
+                    <motion.a
+                        href="https://cal.com/grupograndir/30min"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="relative overflow-hidden bg-accent text-white px-10 py-4 rounded-full text-base font-bold shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:shadow-[0_0_50px_rgba(255,40,0,0.5)] transition-all group"
+                        className="relative overflow-hidden bg-accent text-white px-10 py-4 rounded-full text-base font-bold shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:shadow-[0_0_50px_rgba(255,40,0,0.5)] transition-all group cursor-pointer inline-block"
                     >
                         <span className="relative z-10">Agilizar mis procesos</span>
                         <motion.div
@@ -86,7 +89,7 @@ const ServicesHero = () => {
                             transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
                             className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
                         />
-                    </motion.button>
+                    </motion.a>
                 </motion.div>
 
                 {/* Feature Bar */}

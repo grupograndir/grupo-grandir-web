@@ -157,12 +157,14 @@ const BottomNav = () => {
                     })}
 
                     {/* CTA */}
-                    <button
-                        onClick={() => scrollTo('#contacto')}
+                    <a
+                        href="https://cal.com/grupograndir/30min"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="ml-1 flex items-center gap-2 bg-accent hover:bg-accent/90 text-white font-bold px-5 py-2.5 rounded-full text-xs transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,40,0,0.3)] hover:scale-105 whitespace-nowrap cursor-pointer"
                     >
                         Trabajemos juntos
-                    </button>
+                    </a>
                 </motion.nav>
             )}
         </AnimatePresence>

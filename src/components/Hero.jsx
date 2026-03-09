@@ -59,13 +59,16 @@ const Hero = () => {
                     Grupo Grandir<span className="text-sm">.</span>
                 </span>
 
-                <motion.button
+                <motion.a
+                    href="https://cal.com/grupograndir/30min"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-accent text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] hover:shadow-[0_0_30px_rgba(255,40,0,0.5)] transition-all whitespace-nowrap z-10"
+                    className="bg-accent text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] hover:shadow-[0_0_30px_rgba(255,40,0,0.5)] transition-all whitespace-nowrap z-10 cursor-pointer"
                 >
                     Trabajemos juntos
-                </motion.button>
+                </motion.a>
             </motion.div>
 
             {/* Hero Content — vertically centered */}
@@ -114,10 +117,13 @@ const Hero = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <motion.button
+                    <motion.a
+                        href="https://cal.com/grupograndir/30min"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="relative overflow-hidden bg-white text-black px-12 py-4 rounded-full text-lg font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all group"
+                        className="relative overflow-hidden bg-white text-black px-12 py-4 rounded-full text-lg font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all group cursor-pointer inline-block"
                     >
                         <span className="relative z-10">Ver servicios</span>
                         <motion.div
@@ -126,7 +132,7 @@ const Hero = () => {
                             transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
                             className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -z-0"
                         />
-                    </motion.button>
+                    </motion.a>
                 </motion.div>
             </div>
         </section>

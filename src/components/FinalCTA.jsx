@@ -78,7 +78,9 @@ const FinalCTA = () => {
                         transition={{ duration: 0.6, delay: 0.4 }}
                     >
                         <a
-                            href="#contacto"
+                            href="https://cal.com/grupograndir/30min"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="group relative inline-flex items-center gap-3 bg-accent hover:bg-accent/90 text-white font-bold px-10 py-4 rounded-full text-base transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,40,0,0.4)] hover:scale-105"
                         >
                             <span>Agendar llamada gratuita</span>

@@ -170,7 +170,9 @@ const FAQ = () => {
                 >
                     <p className="text-secondary text-sm mb-4">¿Tienes más preguntas?</p>
                     <a
-                        href="#contacto"
+                        href="https://cal.com/grupograndir/30min"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 text-sm"
                     >
                         Escríbenos y te respondemos

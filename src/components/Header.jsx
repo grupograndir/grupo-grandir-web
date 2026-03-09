@@ -23,13 +23,16 @@ const Header = () => {
                     <a href="#" className="hover:text-white transition-colors">FAQ</a>
                 </div>
 
-                <motion.button
+                <motion.a
+                    href="https://cal.com/grupograndir/30min"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-accent text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] hover:shadow-[0_0_30px_rgba(255,40,0,0.5)] transition-all whitespace-nowrap"
+                    className="bg-accent text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] hover:shadow-[0_0_30px_rgba(255,40,0,0.5)] transition-all whitespace-nowrap cursor-pointer"
                 >
                     Trabajemos juntos
-                </motion.button>
+                </motion.a>
             </nav>
         </motion.header>
     );

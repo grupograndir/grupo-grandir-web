@@ -597,7 +597,9 @@ const Methodology = () => {
                             {/* CTA */}
                             <div className="mt-8 px-5 hidden lg:block">
                                 <a
-                                    href="#contacto"
+                                    href="https://cal.com/grupograndir/30min"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="w-full inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,40,0,0.3)] hover:scale-105 text-sm"
                                 >
                                     Quiero empezar ya

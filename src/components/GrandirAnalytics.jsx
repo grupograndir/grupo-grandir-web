@@ -156,16 +156,19 @@ const GrandirAnalytics = () => {
                             </div>
 
                             {/* CTA */}
-                            <motion.button
+                            <motion.a
+                                href="https://cal.com/grupograndir/30min"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="w-full flex items-center justify-between bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] rounded-full px-6 py-4 transition-all group"
+                                className="w-full flex items-center justify-between bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] rounded-full px-6 py-4 transition-all group cursor-pointer"
                             >
                                 <span className="text-sm font-semibold text-white">Recuperar inversión</span>
                                 <svg className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
-                            </motion.button>
+                            </motion.a>
 
                             <p className="text-[10px] text-secondary/60 text-center mt-4">
                                 *Datos basados en auditorías previas. Resultados finales sujetos a análisis técnico.
