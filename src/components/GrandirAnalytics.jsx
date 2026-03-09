@@ -38,7 +38,7 @@ const GrandirAnalytics = () => {
     }, [manualPercent, hoursPerWeek, hourlyValue]);
 
     return (
-        <section className="relative py-32 overflow-hidden">
+        <section id="analytics" className="relative py-32 overflow-hidden">
             {/* Background radial glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[200px] pointer-events-none" />
 

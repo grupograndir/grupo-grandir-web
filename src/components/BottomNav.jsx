@@ -36,6 +36,22 @@ const navItems = [
         ),
     },
     {
+        label: 'Calculadora',
+        href: '#analytics',
+        icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2" />
+                <line x1="8" y1="6" x2="16" y2="6" />
+                <line x1="8" y1="10" x2="10" y2="10" />
+                <line x1="14" y1="10" x2="16" y2="10" />
+                <line x1="8" y1="14" x2="10" y2="14" />
+                <line x1="14" y1="14" x2="16" y2="14" />
+                <line x1="8" y1="18" x2="10" y2="18" />
+                <line x1="14" y1="18" x2="16" y2="18" />
+            </svg>
+        ),
+    },
+    {
         label: 'Metodología',
         href: '#metodologia',
         icon: (
@@ -81,7 +97,7 @@ const BottomNav = () => {
 
     // Track which section is in view based on scroll position
     useEffect(() => {
-        const sectionIds = ['hero', 'problemas', 'soluciones', 'metodologia', 'faqs'];
+        const sectionIds = ['hero', 'problemas', 'soluciones', 'analytics', 'metodologia', 'faqs'];
 
         const handleSectionTrack = () => {
             const viewportMiddle = window.scrollY + window.innerHeight * 0.4;
