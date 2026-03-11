@@ -12,9 +12,9 @@ import BottomNav from './movil/BottomNav'
 
 function AppMobile() {
     return (
-        <main className="bg-background min-h-screen text-white selection:bg-accent selection:text-white">
-            {/* Añadiremos padding inferior extra para que el BottomNav móvil no tape el contenido */}
-            <div className="pb-24">
+        <main className="bg-background min-h-screen text-white selection:bg-accent selection:text-white overflow-x-hidden">
+            {/* Extra bottom padding for the fixed tab bar + safe area */}
+            <div className="pb-20">
                 <Hero />
                 <PainPoints />
                 <Transformation />

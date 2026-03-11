@@ -1,24 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const rotatingWords = ['VELOCIDAD', 'EFICIENCIA', 'CONTROL', 'RENTABILIDAD', 'CRECIMIENTO'];
 
 const Hero = () => {
     const [wordIndex, setWordIndex] = useState(0);
-    const [maxWidth, setMaxWidth] = useState('auto');
-    const measureRef = useRef(null);
-
-    // Measure the widest word once on mount to fix the container width
-    useEffect(() => {
-        if (measureRef.current) {
-            const spans = measureRef.current.querySelectorAll('span');
-            let max = 0;
-            spans.forEach((span) => {
-                if (span.offsetWidth > max) max = span.offsetWidth;
-            });
-            setMaxWidth(`${Math.ceil(max * 1.1)}px`);
-        }
-    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -28,34 +14,18 @@ const Hero = () => {
     }, []);
 
     return (
-        <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-            {/* Background Glows */}
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] -z-10" />
-            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] -z-10" />
-
-            {/* Hidden measurement container */}
-            <div
-                ref={measureRef}
-                aria-hidden="true"
-                className="absolute opacity-0 pointer-events-none text-[42px] leading-tight font-extrabold tracking-tighter font-display whitespace-nowrap"
-                style={{ visibility: 'hidden' }}
-            >
-                {rotatingWords.map((word) => (
-                    <span key={word} className="block">{word}</span>
-                ))}
-            </div>
+        <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-5">
+            {/* Background Glows — smaller for mobile perf */}
+            <div className="absolute top-1/4 left-1/4 w-[250px] h-[250px] bg-accent/8 rounded-full blur-[80px] -z-10" />
 
             {/* Navigation Pill — pinned to top */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.02 }}
-                className="absolute top-8 inset-x-0 mx-auto flex items-center justify-between w-[90%] max-w-3xl bg-[#111111] border border-white/5 rounded-full py-1.5 pl-6 pr-1.5 shadow-xl z-20 group"
+                className="absolute top-6 inset-x-0 mx-auto flex items-center justify-between w-[92%] bg-[#111111] border border-white/5 rounded-full py-1.5 pl-5 pr-1.5 shadow-xl z-20"
             >
-                <div className="absolute inset-0 bg-accent/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-                <span className="text-lg font-bold tracking-tighter text-white uppercase font-display z-10">
+                <span className="text-base font-bold tracking-tighter text-white uppercase font-display z-10">
                     Grupo Grandir<span className="text-sm">.</span>
                 </span>
 
@@ -63,30 +33,25 @@ const Hero = () => {
                     href="https://cal.com/grupograndir/30min"
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-accent text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] hover:shadow-[0_0_30px_rgba(255,40,0,0.5)] transition-all whitespace-nowrap z-10 cursor-pointer"
+                    className="bg-accent text-white px-4 py-2 rounded-full text-xs font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] whitespace-nowrap z-10 cursor-pointer"
                 >
                     Trabajemos juntos
                 </motion.a>
             </motion.div>
 
-            {/* Hero Content — vertically centered */}
-            <div className="container mx-auto px-6 flex flex-col items-center z-10 text-center">
+            {/* Hero Content — fully centered, text centered */}
+            <div className="w-full flex flex-col items-center z-10 text-center">
                 <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[42px] leading-tight font-extrabold tracking-tighter mb-8 leading-[0.9] font-display"
+                    className="text-[32px] font-extrabold tracking-tighter leading-[1.05] font-display mb-6"
                 >
-                    <span className="text-gradient">MENOS COSTES.</span>
-                    <br />
-                    <span className="inline-flex items-baseline justify-center" style={{ marginTop: '0.15em' }}>
-                        <span className="text-white">MÁS&nbsp;</span>
-                        <span
-                            className="inline-block text-left"
-                            style={{ width: maxWidth, clipPath: 'inset(-10% -100% -10% -100%)' }}
-                        >
+                    <span className="text-gradient block">MENOS COSTES.</span>
+                    <span className="flex items-baseline justify-center flex-wrap gap-x-2" style={{ marginTop: '0.15em' }}>
+                        <span className="text-white">MÁS</span>
+                        <span className="inline-block overflow-hidden" style={{ minWidth: '140px', height: '1.2em' }}>
                             <AnimatePresence mode="wait">
                                 <motion.span
                                     key={rotatingWords[wordIndex]}
@@ -107,9 +72,9 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-10 leading-relaxed"
+                    className="text-base text-secondary max-w-[340px] mx-auto mb-8 leading-relaxed"
                 >
-                    Hacemos que tu empresa sea X10 más eficiente eliminando horas de procesos manuales innecesarios. Optimización real para empresas que no tienen tiempo que perder.
+                    Hacemos que tu empresa sea X10 más eficiente eliminando horas de procesos manuales innecesarios.
                 </motion.p>
 
                 <motion.div
@@ -121,9 +86,8 @@ const Hero = () => {
                         href="https://cal.com/grupograndir/30min"
                         target="_blank"
                         rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="relative overflow-hidden bg-white text-black px-12 py-4 rounded-full text-lg font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all group cursor-pointer inline-block"
+                        className="relative overflow-hidden bg-white text-black px-10 py-3.5 rounded-full text-base font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all group cursor-pointer inline-block"
                     >
                         <span className="relative z-10">Ver servicios</span>
                         <motion.div
