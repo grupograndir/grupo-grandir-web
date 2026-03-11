@@ -1,30 +1,15 @@
 import React from 'react'
-import Hero from './components/Hero'
-import Transformation from './components/Transformation'
-import PainPoints from './components/PainPoints'
-import GrandirAnalytics from './components/GrandirAnalytics'
-import ServicesHero from './components/ServicesHero'
-import Methodology from './components/Methodology'
-import FAQ from './components/FAQ'
-import FinalCTA from './components/FinalCTA'
-import Footer from './components/Footer'
-import BottomNav from './components/BottomNav'
+import AppDesktop from './AppDesktop'
+import AppMobile from './AppMobile'
+import useIsMobile from './hooks/useIsMobile'
 
 function App() {
-  return (
-    <main className="bg-background min-h-screen text-white selection:bg-accent selection:text-white">
-      <Hero />
-      <PainPoints />
-      <Transformation />
-      <ServicesHero />
-      <GrandirAnalytics />
-      <Methodology />
-      <FAQ />
-      <FinalCTA />
-      <Footer />
-      <BottomNav />
-    </main>
-  )
+  const isMobile = useIsMobile();
+
+  // Show nothing while evaluating on first render to avoid flash of wrong content
+  if (isMobile === undefined) return null;
+
+  return isMobile ? <AppMobile /> : <AppDesktop />;
 }
 
 export default App
