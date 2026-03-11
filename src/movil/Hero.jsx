@@ -15,17 +15,17 @@ const Hero = () => {
 
     return (
         <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-5">
-            {/* Background Glows — smaller for mobile perf */}
-            <div className="absolute top-1/4 left-1/4 w-[250px] h-[250px] bg-accent/8 rounded-full blur-[80px] -z-10" />
+            {/* Background Glows — scaled for device */}
+            <div className="absolute top-1/4 left-1/4 w-[250px] h-[250px] md:w-[400px] md:h-[400px] bg-accent/8 rounded-full blur-[80px] md:blur-[120px] -z-10" />
 
             {/* Navigation Pill — pinned to top */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute top-6 inset-x-0 mx-auto flex items-center justify-between w-[92%] bg-[#111111] border border-white/5 rounded-full py-1.5 pl-5 pr-1.5 shadow-xl z-20"
+                className="absolute top-6 inset-x-0 mx-auto flex items-center justify-between w-[92%] md:w-[80%] lg:w-[70%] max-w-3xl bg-[#111111] border border-white/5 rounded-full py-1.5 pl-5 pr-1.5 shadow-xl z-20"
             >
-                <span className="text-base font-bold tracking-tighter text-white uppercase font-display z-10">
+                <span className="text-base md:text-lg font-bold tracking-tighter text-white uppercase font-display z-10">
                     Grupo Grandir<span className="text-sm">.</span>
                 </span>
 
@@ -34,24 +34,25 @@ const Hero = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     whileTap={{ scale: 0.95 }}
-                    className="bg-accent text-white px-4 py-2 rounded-full text-xs font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] whitespace-nowrap z-10 cursor-pointer"
+                    className="bg-accent text-white px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-bold shadow-[0_0_20px_rgba(255,40,0,0.3)] whitespace-nowrap z-10 cursor-pointer"
                 >
                     Trabajemos juntos
                 </motion.a>
             </motion.div>
 
-            {/* Hero Content — fully centered, text centered */}
-            <div className="w-full flex flex-col items-center z-10 text-center">
+            {/* Hero Content — fully centered, text centered, responsive font */}
+            <div className="w-full max-w-2xl mx-auto flex flex-col items-center z-10 text-center">
                 <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[32px] font-extrabold tracking-tighter leading-[1.05] font-display mb-6"
+                    className="font-extrabold tracking-tighter leading-[1.05] font-display mb-6"
+                    style={{ fontSize: 'clamp(32px, 6vw, 56px)' }}
                 >
                     <span className="text-gradient block">MENOS COSTES.</span>
-                    <span className="flex items-baseline justify-center flex-wrap gap-x-2" style={{ marginTop: '0.15em' }}>
+                    <span className="flex items-baseline justify-center flex-wrap gap-x-2 md:gap-x-3" style={{ marginTop: '0.15em' }}>
                         <span className="text-white">MÁS</span>
-                        <span className="inline-block overflow-hidden" style={{ minWidth: '140px', height: '1.2em' }}>
+                        <span className="inline-block overflow-hidden" style={{ minWidth: 'clamp(140px, 25vw, 280px)', height: '1.2em' }}>
                             <AnimatePresence mode="wait">
                                 <motion.span
                                     key={rotatingWords[wordIndex]}
@@ -72,7 +73,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-base text-secondary max-w-[340px] mx-auto mb-8 leading-relaxed"
+                    className="text-base md:text-lg text-secondary max-w-[340px] md:max-w-lg mx-auto mb-8 leading-relaxed"
                 >
                     Hacemos que tu empresa sea X10 más eficiente eliminando horas de procesos manuales innecesarios.
                 </motion.p>
@@ -87,7 +88,7 @@ const Hero = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         whileTap={{ scale: 0.95 }}
-                        className="relative overflow-hidden bg-white text-black px-10 py-3.5 rounded-full text-base font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all group cursor-pointer inline-block"
+                        className="relative overflow-hidden bg-white text-black px-10 py-3.5 md:px-12 md:py-4 rounded-full text-base md:text-lg font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all group cursor-pointer inline-block"
                     >
                         <span className="relative z-10">Ver servicios</span>
                         <motion.div

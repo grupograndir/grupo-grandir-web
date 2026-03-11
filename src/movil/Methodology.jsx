@@ -98,10 +98,10 @@ const StrategyAnimation = ({ isActive }) => {
     }, [isActive]);
 
     return (
-        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-3 flex flex-col">
-            <div className="flex items-center gap-2 mb-2"><div className="w-2 h-2 rounded-full bg-accent/60" /><span className="text-[9px] text-white/40">Ecosistema</span></div>
-            <div className="flex-1 flex items-center justify-center">
-                <svg className="w-full h-full" viewBox="0 0 100 80">
+        <div className="w-full h-full rounded-xl bg-[#0D0D0D] border border-white/[0.06] p-3 flex flex-col overflow-hidden">
+            <div className="flex items-center gap-2 mb-2 shrink-0"><div className="w-2 h-2 rounded-full bg-accent/60" /><span className="text-[9px] text-white/40">Ecosistema</span></div>
+            <div className="flex-1 flex items-center justify-center overflow-hidden min-h-0">
+                <svg width="100%" height="100%" viewBox="0 0 100 80" preserveAspectRatio="xMidYMid meet" style={{ maxWidth: '100%', maxHeight: '100%' }}>
                     {[{ id: 'CRM', x: 10, y: 10 }, { id: 'Hub', x: 35, y: 35, c: true }, { id: 'ERP', x: 65, y: 10 }, { id: 'Flujos', x: 10, y: 60 }, { id: 'BI', x: 65, y: 60 }].map((n, i) => (
                         <g key={n.id}>
                             {!n.c && <line x1={n.x + 8} y1={n.y + 5} x2={43} y2={40} stroke={i - 1 < active ? '#FF2800' : '#fff'} strokeWidth="0.5" opacity={i - 1 < active ? 0.4 : 0.06} />}
@@ -180,7 +180,7 @@ const StepCard = ({ step }) => {
             </div>
             <h3 className="text-xl font-bold tracking-tight text-white mb-3 font-display">{step.title}</h3>
             <p className="text-secondary text-sm leading-relaxed mb-4">{step.description}</p>
-            <div className="h-40 mb-4">
+            <div className="h-40 mb-4 overflow-hidden">
                 <AnimationForStep icon={step.icon} isActive={isInView} />
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -197,7 +197,7 @@ const StepCard = ({ step }) => {
 
 const Methodology = () => {
     return (
-        <section id="metodologia" className="relative py-16 px-5">
+        <section id="metodologia" className="relative py-16 md:py-20 px-5 md:px-8">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/3 right-0 w-[250px] h-[250px] bg-accent/5 rounded-full blur-[100px]" />
             </div>
